@@ -1,0 +1,53 @@
+docs/*
+
+# Bien moi truong (khong day mat khau len Git)
+.env
+backend/.env
+.env.local
+
+# Maven & Java build
+target/
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Bien moi truong (khong day mat khau len Git)
+.env
+backend/.env
+.env.local
+
+# Maven & Java build
+target/
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
