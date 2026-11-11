@@ -15,7 +15,7 @@
     <artifactId>bluemoon-backend</artifactId>
     <version>1.0.0</version>
     <name>bluemoon-backend</name>
-    <description>Khung ma nguon Web Java quan ly chung cu BlueMoon</description>
+    <description>Khung mã nguồn Web Java quản lý chung cư BlueMoon</description>
 
     <properties>
         <java.version>21</java.version>

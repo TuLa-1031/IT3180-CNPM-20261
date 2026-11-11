@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * Lop quan ly ket noi co so du lieu MySQL bang JDBC.
- * Thu tu uu tien doc cau hinh: Bien moi truong -> file .env -> application.properties.
- */
+// Thứ tự ưu tiên đọc cấu hình: biến môi trường hệ thống -> file .env -> application.properties
 public class DatabaseConnection {
 
     private static final Properties appProps = loadAppProperties();
@@ -26,9 +23,6 @@ public class DatabaseConnection {
     private DatabaseConnection() {
     }
 
-    /**
-     * Tao va tra ve mot ket noi moi toi MySQL.
-     */
     public static Connection getConnection() throws SQLException {
         String host = getConfig("DB_HOST", "db.host", "localhost");
         String port = getConfig("DB_PORT", "db.port", "3306");
@@ -44,9 +38,6 @@ public class DatabaseConnection {
         return DriverManager.getConnection(url, user, password);
     }
 
-    /**
-     * Dong ket noi an toan sau khi su dung.
-     */
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {
@@ -54,19 +45,16 @@ public class DatabaseConnection {
                     connection.close();
                 }
             } catch (SQLException e) {
-                System.err.println("Loi khi dong ket noi MySQL: " + e.getMessage());
+                System.err.println("Failed to close MySQL connection: " + e.getMessage());
             }
         }
     }
 
-    /**
-     * Kiem tra ket noi toi MySQL co hoat dong khong.
-     */
     public static boolean testConnection() {
         try (Connection conn = getConnection()) {
             return conn != null && conn.isValid(3);
         } catch (SQLException e) {
-            System.err.println("Khong the ket noi toi MySQL: " + e.getMessage());
+            System.err.println("Failed to connect to MySQL: " + e.getMessage());
             return false;
         }
     }
@@ -101,13 +89,14 @@ public class DatabaseConnection {
                 props.load(is);
             }
         } catch (IOException e) {
-            System.err.println("Khong doc duoc application.properties: " + e.getMessage());
+            System.err.println("Failed to read application.properties: " + e.getMessage());
         }
         return props;
     }
 
     private static Map<String, String> loadDotEnv() {
         Map<String, String> values = new HashMap<>();
+        // Hỗ trợ chạy từ thư mục gốc dự án hoặc từ bên trong backend/
         List<Path> candidates = List.of(
                 Paths.get(".env"),
                 Paths.get("backend", ".env"),
@@ -131,7 +120,7 @@ public class DatabaseConnection {
                         }
                     }
                 } catch (IOException e) {
-                    System.err.println("Khong doc duoc file .env tai " + path + ": " + e.getMessage());
+                    System.err.println("Failed to read .env file at " + path + ": " + e.getMessage());
                 }
                 break;
             }

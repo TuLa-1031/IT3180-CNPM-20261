@@ -1,13 +1,14 @@
 package com.bluemoon.controller;
 
-import com.bluemoon.config.DatabaseConnection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.bluemoon.config.DatabaseConnection;
 
 @RestController
 @RequestMapping("/api")
@@ -22,10 +23,9 @@ public class HealthController {
         response.put("database", DatabaseConnection.getDatabaseName());
         response.put("dbConnected", dbConnected);
         response.put("message", dbConnected
-                ? "Ket noi co so du lieu MySQL thanh cong"
-                : "Khong the ket noi toi co so du lieu MySQL");
+                ? "Connected to MySQL database successfully"
+                : "Failed to connect to MySQL database");
 
         return ResponseEntity.ok(response);
     }
 }
-
