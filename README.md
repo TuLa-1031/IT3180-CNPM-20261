@@ -6,7 +6,7 @@ Dự án môn Nhập môn Công nghệ Phần mềm (IT3180) hỗ trợ Ban qu�
 
 ```text
 IT3180_blue_moon/
-├── backend/       # Mã nguồn Web Java (Maven + Spring Boot Web + JDBC)
+├── backend/       # Mã nguồn Web Java (Maven + Spring Boot + Spring Data JPA)
 ├── database/      # Tập lệnh SQL khởi tạo cơ sở dữ liệu MySQL
 ├── frontend/      # Mã nguồn giao diện người dùng
 ├── .env.example   # File mẫu cấu hình biến môi trường kết nối MySQL

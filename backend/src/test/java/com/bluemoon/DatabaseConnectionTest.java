@@ -2,6 +2,8 @@ package com.bluemoon;
 
 import com.bluemoon.config.DatabaseConnection;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,11 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 class DatabaseConnectionTest {
+
+    @Autowired
+    private DatabaseConnection databaseConnection;
 
     @Test
     void testGetConnectionAndQuery() throws Exception {
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = databaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM households")) {
             assertNotNull(conn);
@@ -27,7 +33,6 @@ class DatabaseConnectionTest {
 
     @Test
     void testConnectionHelper() {
-        assertTrue(DatabaseConnection.testConnection());
+        assertTrue(databaseConnection.testConnection());
     }
 }
-
