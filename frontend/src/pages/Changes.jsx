@@ -1,0 +1,86 @@
+import { useState } from 'react'
+import { useApp } from '../App'
+import { Badge, Empty, Field, FilterSelect, FormGrid, Icon, PageHead, SelectField, TableFoot, TextArea, Toolbar } from '../components/ui'
+import { Modal } from '../components/Modal'
+import { CHANGE_TYPE, date } from '../lib/format'
+
+export default function Changes() {
+  const { data, user, commit, nextId, notify } = useApp()
+  const [search, setSearch] = useState('')
+  const [type, setType] = useState('')
+  const [adding, setAdding] = useState(false)
+  const resident = (id) => data.residents.find((r) => r.id === id)
+  const household = (id) => data.households.find((h) => h.id === id)
+
+  const term = search.trim().toLowerCase()
+  const rows = data.residenceChanges.filter((c) => {
+    const r = resident(c.residentId), h = household(c.householdId)
+    return (!type || c.changeType === type) &&
+      (!term || [r?.fullName, c.destinationOrOrigin, h?.apartmentNumber].some((v) => String(v || '').toLowerCase().includes(term)))
+  }).sort((a, b) => String(b.startDate).localeCompare(String(a.startDate)))
+
+  const save = (form) => {
+    const r = resident(Number(form.residentId))
+    if (!r) { notify('Chọn cư dân cần ghi nhận', 'err'); return false }
+    commit('residenceChanges', {
+      type: 'create',
+      entity: {
+        id: nextId(data.residenceChanges), residentId: r.id, householdId: r.householdId,
+        changeType: form.changeType, startDate: form.startDate,
+        endDate: form.endDate || null,
+        destinationOrOrigin: String(form.destinationOrOrigin || '').trim(),
+        reason: String(form.reason || '').trim(), createdBy: user.id
+      }
+    })
+    notify('Đã ghi nhận biến đổi')
+  }
+
+  return (
+    <>
+      <PageHead title="Biến đổi nhân khẩu" sub="Theo dõi tạm trú, tạm vắng và biến động cư dân">
+        <button className="btn btn-primary" onClick={() => setAdding(true)}><Icon name="plus" size={16} />Ghi nhận biến đổi</button>
+      </PageHead>
+      <section className="card">
+        <Toolbar value={search} onChange={setSearch} placeholder="Tìm cư dân, địa chỉ…"
+          filter={<FilterSelect label="Lọc loại biến đổi" value={type} onChange={setType}
+            options={[['', 'Tất cả loại'], ['TEMPORARY_RESIDENCE', 'Tạm trú'], ['TEMPORARY_ABSENCE', 'Tạm vắng'], ['MOVE_IN', 'Chuyển đến'], ['MOVE_OUT', 'Chuyển đi']]} />} />
+        <div className="table-wrap">
+          <table className="data">
+            <thead><tr><th>Cư dân</th><th>Căn hộ</th><th>Loại biến đổi</th><th>Từ ngày</th><th>Đến ngày</th><th>Địa chỉ liên quan</th><th>Lý do</th></tr></thead>
+            <tbody>
+              {rows.length ? rows.map((c) => {
+                const meta = CHANGE_TYPE[c.changeType] || [c.changeType, 'gray']
+                return (
+                  <tr key={c.id}>
+                    <td className="cell-main">{resident(c.residentId)?.fullName || '—'}</td>
+                    <td>{household(c.householdId)?.apartmentNumber || '—'}</td>
+                    <td><Badge text={meta[0]} tone={meta[1]} /></td>
+                    <td>{date(c.startDate)}</td><td>{date(c.endDate)}</td>
+                    <td>{c.destinationOrOrigin || '—'}</td>
+                    <td className="muted">{c.reason || '—'}</td>
+                  </tr>
+                )
+              }) : <tr><td colSpan={7}><Empty title="Chưa có biến đổi nào" hint="Các ghi nhận tạm trú, tạm vắng sẽ xuất hiện tại đây." /></td></tr>}
+            </tbody>
+          </table>
+        </div>
+        <TableFoot shown={rows.length} total={data.residenceChanges.length} />
+      </section>
+
+      {adding && (
+        <Modal title="Ghi nhận biến đổi nhân khẩu" wide onClose={() => setAdding(false)} onConfirm={save}>
+          <FormGrid>
+            <SelectField label="Cư dân" name="residentId"
+              options={data.residents.map((r) => [r.id, `${r.fullName}, ${household(r.householdId)?.apartmentNumber || ''}`])} />
+            <SelectField label="Loại biến đổi" name="changeType"
+              options={[['TEMPORARY_RESIDENCE', 'Tạm trú'], ['TEMPORARY_ABSENCE', 'Tạm vắng'], ['MOVE_IN', 'Chuyển đến'], ['MOVE_OUT', 'Chuyển đi']]} />
+            <Field label="Từ ngày" name="startDate" type="date" value={new Date().toISOString().slice(0, 10)} required />
+            <Field label="Đến ngày" name="endDate" type="date" />
+            <Field label="Địa chỉ liên quan" name="destinationOrOrigin" />
+            <TextArea label="Lý do" name="reason" />
+          </FormGrid>
+        </Modal>
+      )}
+    </>
+  )
+}
