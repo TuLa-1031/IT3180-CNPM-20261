@@ -12,8 +12,6 @@ npm run build    # xuất ra frontend/dist
 npm run preview  # xem bản build
 ```
 
-Bản thiết kế HTML/CSS/JS thuần trước đó được giữ nguyên trong `frontend tmp/`.
-
 ## Kết nối backend
 
 Mặc định dùng dữ liệu mẫu trùng với `database/init_database.sql` khi backend không chạy.
@@ -32,7 +30,7 @@ Lớp gọi API được tách thành 4 phần, mỗi phần một trách nhiệ
 
 | File | Việc cần sửa khi mở rộng |
 | --- | --- |
-| `src/lib/config.js` | Đổi base URL, timeout, bật `writesEnabled` |
+| `src/lib/config.js` | Đổi base URL, timeout |
 | `src/lib/apiClient.js` | Thêm header/auth, retry, xử lý lỗi chung |
 | `src/lib/resources.js` | **Thêm resource mới / đổi path / đổi shape response ở đây** |
 | `src/lib/data.js` | Chỉ giữ seed và điều phối tải dữ liệu |

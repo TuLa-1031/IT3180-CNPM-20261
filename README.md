@@ -8,7 +8,7 @@ Dự án môn Nhập môn Công nghệ Phần mềm (IT3180) hỗ trợ Ban qu�
 IT3180_blue_moon/
 ├── backend/       # Mã nguồn Web Java (Maven + Spring Boot + Spring Data JPA)
 ├── database/      # Tập lệnh SQL khởi tạo cơ sở dữ liệu MySQL
-├── frontend/      # Mã nguồn giao diện người dùng
+├── frontend/      # Giao diện React 19 + Vite 8
 ├── .env.example   # File mẫu cấu hình biến môi trường kết nối MySQL
 └── README.md
 ```
@@ -36,3 +36,14 @@ IT3180_blue_moon/
   mvn -f backend/pom.xml spring-boot:run
   ```
 - Kiểm tra server và kết nối MySQL tại: `http://localhost:8080/api/health`
+
+### 4. Chạy Frontend (React 19 + Vite 8)
+- Cài đặt và chạy:
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  ```
+- Truy cập `http://localhost:5173`; build bản production bằng `npm run build`.
+- Mặc định dùng dữ liệu mẫu. Khi backend chạy ở cổng `8080` hoặc thêm `?api=1`,
+  giao diện tự gọi các API `/api/...`. Xem chi tiết trong `frontend/README.md`.
