@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../App'
 import { Icon, MoonMark } from '../components/Icons'
+import { canStaffAccess } from '../lib/auth'
 import { statusMeta } from '../lib/format'
 
 const NAV = [
@@ -35,8 +36,6 @@ const NAV = [
   }
 ]
 
-const FLAT = NAV.flatMap((group) => group.items)
-
 export default function AdminLayout() {
   const { user, data, source, apiError, logout, setGlobalSearch } = useApp()
   const [open, setOpen] = useState(false)
@@ -44,11 +43,21 @@ export default function AdminLayout() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const visibleNav = useMemo(() => NAV
+    .map((group) => ({
+      ...group,
+      items: group.items.filter(([to]) => canStaffAccess(user?.role, to))
+    }))
+    .filter((group) => group.items.length > 0), [user?.role])
+
+  const flat = useMemo(() => visibleNav.flatMap((group) => group.items), [visibleNav])
   const current = useMemo(
-    () => FLAT.find(([to]) => location.pathname === to)
-      || [...FLAT].sort((a, b) => b[0].length - a[0].length).find(([to]) => location.pathname.startsWith(`${to}/`)),
-    [location.pathname]
+    () => flat.find(([to]) => location.pathname === to)
+      || [...flat].sort((a, b) => b[0].length - a[0].length).find(([to]) => location.pathname.startsWith(`${to}/`)),
+    [location.pathname, flat]
   )
+  const canSearchHouseholds = canStaffAccess(user?.role, '/households')
+  const showPeriod = user?.role !== 'TECHNICIAN'
   const pending = data?.payments?.filter((p) => p.status !== 'PAID').length || 0
   const initials = (user?.fullName || user?.username || '?')
     .split(' ').filter(Boolean).slice(-2).map((word) => word[0]).join('').toUpperCase()
@@ -69,7 +78,7 @@ export default function AdminLayout() {
           <div><div className="brand-name">BlueMoon</div><span className="brand-caption">QUẢN LÝ CHUNG CƯ</span></div>
         </div>
         <nav className="nav" aria-label="Menu quản trị">
-          {NAV.map((group) => (
+          {visibleNav.map((group) => (
             <div className="nav-group" key={group.label}>
               <div className="nav-label">{group.label}</div>
               {group.items.map(([to, label, icon, badge]) => (
@@ -109,11 +118,15 @@ export default function AdminLayout() {
           </button>
           <div className="crumb">BlueMoon <span style={{ margin: '0 6px' }}>/</span> <strong>{current ? current[1] : 'Tổng quan'}</strong></div>
           <div className="topbar-spacer" />
-          <label className="search"><Icon name="search" size={16} />
-            <input value={term} onChange={(event) => setTerm(event.target.value)} onKeyDown={onSearch}
-              placeholder="Tìm hộ gia đình…" aria-label="Tìm kiếm nhanh" />
-          </label>
-          <div className="period-pill"><Icon name="calendar" size={15} />Tháng <strong>10/2026</strong></div>
+          {canSearchHouseholds && (
+            <label className="search"><Icon name="search" size={16} />
+              <input value={term} onChange={(event) => setTerm(event.target.value)} onKeyDown={onSearch}
+                placeholder="Tìm hộ gia đình…" aria-label="Tìm kiếm nhanh" />
+            </label>
+          )}
+          {showPeriod && (
+            <div className="period-pill"><Icon name="calendar" size={15} />Tháng <strong>10/2026</strong></div>
+          )}
           <div className="avatar" style={{ width: 32, height: 32, flex: '0 0 32px' }}>{initials}</div>
         </header>
         <main className="content" id="app-content"><Outlet /></main>

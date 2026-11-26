@@ -50,6 +50,70 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/register", "/api/health", "/error").permitAll()
+
+                        // Tài khoản: chỉ ADMIN quản lý.
+                        .requestMatchers("/api/users", "/api/users/**").hasRole("ADMIN")
+
+                        // UC01 — hộ/nhân khẩu/biến động: kế toán chỉ đọc, kỹ thuật không có quyền.
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/households", "/api/households/**",
+                                "/api/residents", "/api/residents/**",
+                                "/api/residence-changes", "/api/residence-changes/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "ACCOUNTANT")
+                        .requestMatchers("/api/households", "/api/households/**",
+                                "/api/residents", "/api/residents/**",
+                                "/api/residence-changes", "/api/residence-changes/**")
+                        .hasAnyRole("ADMIN", "MANAGER")
+
+                        // UC02 — tài chính: kỹ thuật không có quyền; quản lý chỉ đọc; kế toán ghi.
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/fees", "/api/fees/**",
+                                "/api/payments", "/api/payments/**",
+                                "/api/utility-bills", "/api/utility-bills/**",
+                                "/api/stats", "/api/stats/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "ACCOUNTANT")
+                        .requestMatchers("/api/fees", "/api/fees/**",
+                                "/api/payments", "/api/payments/**",
+                                "/api/utility-bills", "/api/utility-bills/**")
+                        .hasAnyRole("ADMIN", "ACCOUNTANT")
+                        .requestMatchers(HttpMethod.GET, "/api/transactions", "/api/transactions/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "ACCOUNTANT")
+                        .requestMatchers("/api/transactions", "/api/transactions/**")
+                        .hasAnyRole("ADMIN", "ACCOUNTANT")
+
+                        // UC03 — phản ánh: kỹ thuật chỉ đọc; kế toán không có quyền.
+                        .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/api/feedbacks/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "TECHNICIAN")
+                        .requestMatchers("/api/feedbacks", "/api/feedbacks/**")
+                        .hasAnyRole("ADMIN", "MANAGER")
+
+                        // UC04 — bảo trì: kỹ thuật đọc thiết bị/lịch và cập nhật việc của mình.
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/equipment", "/api/equipment/**",
+                                "/api/maintenance-schedules", "/api/maintenance-schedules/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "TECHNICIAN")
+                        .requestMatchers("/api/equipment", "/api/equipment/**",
+                                "/api/maintenance-schedules", "/api/maintenance-schedules/**")
+                        .hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/api/maintenance-tasks", "/api/maintenance-tasks/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "TECHNICIAN")
+                        .requestMatchers("/api/technicians", "/api/technicians/**")
+                        .hasAnyRole("ADMIN", "MANAGER")
+
+                        // UC05 — gửi xe/thẻ: kế toán chỉ đọc phương tiện; kỹ thuật không có quyền.
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/vehicle-registrations", "/api/vehicle-registrations/**",
+                                "/api/parking-cards", "/api/parking-cards/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "ACCOUNTANT")
+                        .requestMatchers("/api/vehicle-registrations", "/api/vehicle-registrations/**",
+                                "/api/parking-cards", "/api/parking-cards/**")
+                        .hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/api/vehicles", "/api/vehicles/**")
+                        .hasAnyRole("ADMIN", "MANAGER", "ACCOUNTANT")
+                        .requestMatchers("/api/vehicles", "/api/vehicles/**")
+                        .hasAnyRole("ADMIN", "MANAGER")
+
+                        // Còn lại: đã đăng nhập (auth/me, auth/password, notifications).
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handler -> handler

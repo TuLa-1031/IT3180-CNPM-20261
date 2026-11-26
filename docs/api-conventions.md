@@ -74,6 +74,34 @@ Mật khẩu mới tối thiểu 6 ký tự; sai mật khẩu cũ trả `400 VAL
 - Thiếu quyền hoặc truy cập dữ liệu hộ khác: `403 FORBIDDEN`.
 - Cư dân bị khóa: `403 ACCOUNT_LOCKED`.
 
+### 2.4 Phân quyền theo vai trò
+
+Backend chặn quyền thô theo nhóm endpoint trong `SecurityConfig`; frontend ẩn menu và chặn URL
+tương ứng, nhưng **backend mới là nơi quyết định**. Quyền sở hữu dữ liệu (hộ của cư dân, việc của
+kỹ thuật) sẽ được kiểm trong service khi endpoint của UC đó được làm ở GĐ2/GĐ3.
+
+| Nhóm endpoint | ADMIN | MANAGER | ACCOUNTANT | TECHNICIAN | RESIDENT |
+|---|:--:|:--:|:--:|:--:|:--:|
+| `/api/users/**` | F | — | — | — | — |
+| `/api/households/**`, `/api/residents/**`, `/api/residence-changes/**` | F | F | R | — | — |
+| `/api/fees/**`, `/api/payments/**`, `/api/utility-bills/**` | F | R | F | — | — |
+| `/api/transactions/**` | F | R | F | — | — |
+| `/api/stats/**` | F | F | F | — | — |
+| `/api/feedbacks/**` | F | F | — | R | — |
+| `/api/equipment/**`, `/api/maintenance-schedules/**` | F | F | — | R | — |
+| `/api/maintenance-tasks/**` | F | F | — | O + cập nhật | — |
+| `/api/technicians/**` | F | F | — | — | — |
+| `/api/vehicle-registrations/**`, `/api/parking-cards/**` | F | F | R | — | — |
+| `/api/vehicles/**` | F | F | R | — | — |
+| `/api/notifications/**` | O | O | O | O | O |
+
+Ký hiệu: **F** toàn quyền, **R** chỉ đọc, **O** dữ liệu của mình, **—** không có quyền.
+Kỹ thuật không đọc được dữ liệu tài chính/nhân khẩu; kế toán không đọc phản ánh/bảo trì. Vi phạm
+trả `403 FORBIDDEN`.
+
+Ở GĐ1, cổng cư dân mới có khung trang nên các dòng cư dân để `—`; khi UC tương ứng có endpoint
+lọc theo hộ, backend sẽ mở `O`/`R` và lấy `householdId` từ token, không tin client gửi lên.
+
 ## 3. Định dạng phản hồi
 
 ### 3.1 Thành công
@@ -212,7 +240,7 @@ Nhân viên dùng chung khung `AdminLayout`, cư dân dùng `ResidentLayout`. Ro
 | Nhân viên | `/account`, `/template` | Tài khoản, trang mẫu |
 | Cư dân | `/resident/bills`, `/resident/feedbacks`, `/resident/vehicles`, `/resident/notifications` | Cổng cư dân |
 
-Route guard chỉ điều hướng; quyền thật vẫn kiểm ở backend.
+Route guard chỉ điều hướng; quyền thật vẫn kiểm ở backend. Menu nhân viên được lọc theo vai trò: kỹ thuật chỉ thấy Phản ánh/Bảo trì, kế toán không thấy Phản ánh/Bảo trì.
 
 ```js
 // features/fees/api.js

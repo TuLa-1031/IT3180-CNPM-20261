@@ -28,13 +28,17 @@ class ControllerSmokeTest {
     private ObjectMapper objectMapper;
 
     /** Các endpoint nghiệp vụ yêu cầu JWT sau khi bật bảo mật ở GĐ1. */
-    private String bearerToken() throws Exception {
+    private String bearerToken(String username, String password) throws Exception {
         String body = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"admin\",\"password\":\"123456\"}"))
+                        .content("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         return "Bearer " + objectMapper.readTree(body).get("token").asText();
+    }
+
+    private String bearerToken() throws Exception {
+        return bearerToken("admin", "123456");
     }
 
     @Test
@@ -51,6 +55,36 @@ class ControllerSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].username").value("admin"))
                 .andExpect(content().string(not(containsString("password"))));
+    }
+
+    @Test
+    void testTechnicianCannotReadResidentOrFinancialData() throws Exception {
+        String token = bearerToken("kythuat", "123456");
+        String[] forbidden = {
+                "/api/households", "/api/residents", "/api/fees", "/api/payments",
+                "/api/utility-bills", "/api/vehicles", "/api/stats/overview"
+        };
+
+        for (String endpoint : forbidden) {
+            mockMvc.perform(get(endpoint).header(HttpHeaders.AUTHORIZATION, token))
+                    .andExpect(status().isForbidden());
+        }
+    }
+
+    @Test
+    void testAccountantCannotReadFeedbackOrManageUsers() throws Exception {
+        String token = bearerToken("ketoan", "123456");
+
+        mockMvc.perform(get("/api/feedbacks").header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(get("/api/users").header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testManagerCanReadFees() throws Exception {
+        mockMvc.perform(get("/api/fees").header(HttpHeaders.AUTHORIZATION, bearerToken("quanly", "123456")))
+                .andExpect(status().isOk());
     }
 
     @Test

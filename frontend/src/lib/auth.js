@@ -68,7 +68,36 @@ export const isStaffRole = (role) => STAFF_ROLES.includes(role)
 
 export const isResidentRole = (role) => role === 'RESIDENT'
 
-/** Trang chủ theo vai trò: cư dân vào cổng cư dân, các vai trò còn lại vào Admin Portal. */
+// Ma trận quyền §2.2: null = toàn bộ khu vực nhân viên.
+const STAFF_AREA_ACCESS = {
+  ADMIN: null,
+  MANAGER: null,
+  ACCOUNTANT: [
+    '/admin', '/statistics',
+    '/households', '/residents', '/changes',
+    '/fees', '/payments', '/bills',
+    '/vehicles', '/vehicles/registrations', '/vehicles/cards',
+    '/account', '/template'
+  ],
+  TECHNICIAN: [
+    '/feedbacks',
+    '/equipment', '/maintenance', '/maintenance-schedules', '/maintenance-tasks',
+    '/account', '/template'
+  ]
+}
+
+/** Có được mở path này trong Admin Portal không (chỉ kiểm tra điều hướng/UI). */
+export function canStaffAccess(role, path) {
+  if (!isStaffRole(role)) return false
+  const allowed = STAFF_AREA_ACCESS[role]
+  if (allowed === null) return true
+  if (!allowed) return false
+  return allowed.some((prefix) => path === prefix || path.startsWith(`${prefix}/`))
+}
+
+/** Trang chủ theo vai trò: cư dân vào cổng cư dân, kỹ thuật vào việc bảo trì. */
 export function roleHome(role) {
-  return isResidentRole(role) ? '/resident' : '/admin'
+  if (isResidentRole(role)) return '/resident'
+  if (role === 'TECHNICIAN') return '/maintenance-tasks'
+  return '/admin'
 }

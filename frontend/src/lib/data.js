@@ -88,12 +88,18 @@ export function defaultUsers() {
   }
 
 // Fetch each resource independently: a failing endpoint falls back on its own.
-export async function loadData() {
+// `keys` giới hạn resource theo vai trò; kỹ thuật/cư dân không tải dữ liệu tài chính.
+export async function loadData(keys = resourceKeys) {
   const fallback = seed()
-  if (!apiConfig.enabled) return { data: fallback, source: 'demo', error: null }
+  if (!apiConfig.enabled) {
+    const data = {}
+    keys.forEach((key) => { data[key] = fallback[key] })
+    return { data, source: 'demo', error: null }
+  }
+  if (!keys.length) return { data: {}, source: 'api', error: null }
 
   const client = createClient(apiConfig)
-  const results = await Promise.all(resourceKeys.map(async (key) => {
+  const results = await Promise.all(keys.map(async (key) => {
     try {
       const rows = await client.getList(RESOURCES[key].path)
       return [key, RESOURCES[key].normalize(rows), null]
@@ -108,7 +114,7 @@ export async function loadData() {
     data[key] = rows
     if (message) error[key] = message
   })
-  const fromApi = results.some(([key, , message]) => key === 'households' && !message)
+  const fromApi = results.some(([, , message]) => !message)
   return { data, source: fromApi ? 'api' : 'demo', error }
 }
 

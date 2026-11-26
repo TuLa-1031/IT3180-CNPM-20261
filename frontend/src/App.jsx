@@ -1,9 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { defaultUsers, loadData } from './lib/data'
 import { applyMutation } from './lib/mutations'
 import { apiClient } from './lib/apiClient'
-import { clearToken, getToken, isResidentRole, isStaffRole, isTokenExpired, roleHome, setToken } from './lib/auth'
+import { canStaffAccess, clearToken, getToken, isResidentRole, isStaffRole, isTokenExpired, roleHome, setToken } from './lib/auth'
 import { ToastHost } from './components/Toast'
 import AdminLayout from './app/AdminLayout'
 import ResidentLayout from './app/ResidentLayout'
@@ -19,9 +19,19 @@ import Bills from './pages/Bills'
 import Statistics from './pages/Statistics'
 import Account from './pages/Account'
 import TemplatePage from './features/_template/pages/TemplatePage'
+import { resourceKeys } from './lib/resources'
 
 const AppCtx = createContext(null)
 export const useApp = () => useContext(AppCtx)
+
+// Kỹ thuật/cư dân không tải dữ liệu tài chính cũ; trang của họ dùng API riêng ở GĐ sau.
+const DATA_KEYS_BY_ROLE = {
+  ADMIN: resourceKeys,
+  MANAGER: resourceKeys,
+  ACCOUNTANT: resourceKeys,
+  TECHNICIAN: [],
+  RESIDENT: []
+}
 
 function AppProvider({ children }) {
   const [data, setData] = useState(null)
@@ -74,9 +84,10 @@ function AppProvider({ children }) {
   }, [sessionExpired])
 
   const userId = user?.id
+  const userRole = user?.role
 
-  // Dữ liệu nghiệp vụ: nạp sau khi đăng nhập. Trang cũ dùng chung context này
-  // cho tới khi từng phân hệ chuyển sang features/<domain>/api.js.
+  // Dữ liệu nghiệp vụ: nạp sau khi đăng nhập, chỉ các resource vai trò được đọc.
+  // Trang cũ dùng chung context này cho tới khi chuyển sang features/<domain>/api.js.
   useEffect(() => {
     if (!userId) {
       setData(null)
@@ -86,7 +97,7 @@ function AppProvider({ children }) {
     }
     let alive = true
     setReady(false)
-    loadData().then(({ data: loaded, source: from, error }) => {
+    loadData(DATA_KEYS_BY_ROLE[userRole] || []).then(({ data: loaded, source: from, error }) => {
       if (!alive) return
       setData(loaded)
       setUsers(defaultUsers())
@@ -95,7 +106,7 @@ function AppProvider({ children }) {
       setReady(true)
     })
     return () => { alive = false }
-  }, [userId])
+  }, [userId, userRole])
 
   const login = async (username, password) => {
     const result = await apiClient.request('/auth/login', {
@@ -155,6 +166,7 @@ function AppProvider({ children }) {
 
 function Protected({ role, children }) {
   const { user, authReady, ready, sessionExpired } = useApp()
+  const location = useLocation()
   const token = getToken()
   const validSession = Boolean(token) && !isTokenExpired(token)
 
@@ -165,6 +177,9 @@ function Protected({ role, children }) {
   if (!authReady) return <div className="loading">Đang kiểm tra đăng nhập…</div>
   if (!user || !validSession) return <Navigate to="/login" replace />
   if (role === 'staff' && !isStaffRole(user.role)) return <Navigate to="/resident" replace />
+  if (role === 'staff' && !canStaffAccess(user.role, location.pathname)) {
+    return <Navigate to={roleHome(user.role)} replace />
+  }
   if (role === 'resident' && !isResidentRole(user.role)) return <Navigate to="/admin" replace />
   if (!ready) return <div className="loading">Đang tải dữ liệu…</div>
   return children
