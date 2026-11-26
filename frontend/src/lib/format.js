@@ -21,6 +21,7 @@ export function datetime(value) {
 export const STATUS = {
   ACTIVE: ['Đang hoạt động', 'green'],
   INACTIVE: ['Ngừng hoạt động', 'gray'],
+  LOCKED: ['Đã khóa', 'red'],
   MOVED_OUT: ['Đã chuyển đi', 'gray'],
   UNPAID: ['Chưa nộp', 'red'],
   PARTIAL: ['Nộp một phần', 'gold'],
@@ -34,7 +35,23 @@ export const STATUS = {
   MOVE_OUT: ['Chuyển đi', 'gray'],
   ADMIN: ['Quản trị viên', 'blue'],
   MANAGER: ['Ban quản trị', 'blue'],
-  ACCOUNTANT: ['Kế toán', 'gold']
+  ACCOUNTANT: ['Kế toán', 'gold'],
+  TECHNICIAN: ['Kỹ thuật viên', 'blue'],
+  RESIDENT: ['Cư dân', 'green'],
+  PENDING: ['Chờ xử lý', 'gold'],
+  APPROVED: ['Đã duyệt', 'green'],
+  REJECTED: ['Từ chối', 'red'],
+  NEW: ['Mới', 'blue'],
+  IN_PROGRESS: ['Đang xử lý', 'gold'],
+  RESOLVED: ['Đã giải quyết', 'green'],
+  DONE: ['Hoàn thành', 'green'],
+  CANCELLED: ['Đã hủy', 'gray'],
+  PLANNED: ['Đã lên lịch', 'blue'],
+  UNREAD: ['Chưa đọc', 'gold'],
+  READ: ['Đã đọc', 'gray'],
+  BROKEN: ['Hỏng', 'red'],
+  MAINTENANCE: ['Đang bảo trì', 'gold'],
+  REPLACED: ['Đã thay thế', 'gray']
 }
 
 export const FEE_TYPE = {

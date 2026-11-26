@@ -10,7 +10,8 @@ Thư mục này là nơi tra cứu chung của nhóm. `README.md` ở gốc đ�
 3. [`ke-hoach-chia-viec.md`](ke-hoach-chia-viec.md) — lịch, ai làm gì, hạn.
 4. [`chi-tiet-cong-viec.md`](chi-tiet-cong-viec.md) — task của bạn, từng ngày.
 5. [`quy-uoc-code.md`](quy-uoc-code.md) — cách viết backend, frontend, database, test.
-6. [`AGENTS.md`](../AGENTS.md) — quy trình 8 bước, SCOPE, ranh giới.
+6. [`api-conventions.md`](api-conventions.md) — hợp đồng API, mã lỗi, registry endpoint.
+7. [`AGENTS.md`](../AGENTS.md) — quy trình 8 bước, SCOPE, ranh giới.
 
 ## Bảng tài liệu
 
@@ -20,6 +21,7 @@ Thư mục này là nơi tra cứu chung của nhóm. `README.md` ở gốc đ�
 | [`ke-hoach-chia-viec.md`](ke-hoach-chia-viec.md) | **Kế hoạch** — lịch 15 ngày, phân công, hạn, luật ngắn | Trước mọi task |
 | [`chi-tiet-cong-viec.md`](chi-tiet-cong-viec.md) | **Chi tiết** — task ID, file làm việc, kết quả đầu ra, xong khi | Trước khi làm |
 | [`quy-uoc-code.md`](quy-uoc-code.md) | **Quy ước** — kiến trúc, naming, backend, API, frontend, DB, test, Git | Trước khi viết code |
+| [`api-conventions.md`](api-conventions.md) | **Hợp đồng API** — auth, lỗi, phân trang, registry endpoint | Khi gọi/thêm API |
 | [`AGENTS.md`](../AGENTS.md) | **Cách làm** — 8 bước, SCOPE, file ownership, review, AI | Trước mọi task |
 | [`README.md`](../README.md) | **Cài đặt** — MySQL, backend, frontend, tài khoản demo | Lần đầu và khi dựng máy |
 | [`frontend/README.md`](../frontend/README.md) | **Frontend** — cách chạy, cấu trúc, lớp gọi API | Khi sửa giao diện |

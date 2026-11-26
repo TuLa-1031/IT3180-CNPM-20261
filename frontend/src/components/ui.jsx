@@ -1,5 +1,6 @@
 // Small shared building blocks: page head, stats, badges, fields, charts.
 import { Icon } from './Icons'
+import { statusMeta } from '../lib/format'
 export { Icon } from './Icons'
 
 export function PageHead({ title, sub, children }) {
@@ -32,20 +33,8 @@ export function Badge({ text, tone = 'gray' }) {
 }
 
 export function StatusBadge({ value }) {
-  const labels = {
-    ACTIVE: 'Đang hoạt động', INACTIVE: 'Ngừng hoạt động', MOVED_OUT: 'Đã chuyển đi',
-    UNPAID: 'Chưa nộp', PARTIAL: 'Nộp một phần', PAID: 'Đã nộp', OPEN: 'Đang thu', CLOSED: 'Đã kết thúc',
-    PERMANENT: 'Thường trú', TEMPORARY_RESIDENCE: 'Tạm trú', TEMPORARY_ABSENCE: 'Tạm vắng',
-    MOVE_IN: 'Chuyển đến', MOVE_OUT: 'Chuyển đi', ADMIN: 'Quản trị viên', MANAGER: 'Ban quản trị',
-    ACCOUNTANT: 'Kế toán'
-  }
-  const tones = {
-    ACTIVE: 'green', PAID: 'green', OPEN: 'blue', PERMANENT: 'green', MOVE_IN: 'green', ADMIN: 'blue', MANAGER: 'blue',
-    PARTIAL: 'gold', TEMPORARY_ABSENCE: 'gold', ACCOUNTANT: 'gold',
-    UNPAID: 'red', INACTIVE: 'gray', MOVED_OUT: 'gray', CLOSED: 'gray', MOVE_OUT: 'gray',
-    TEMPORARY_RESIDENCE: 'blue'
-  }
-  return <Badge text={labels[value] || value || '—'} tone={tones[value] || 'gray'} />
+  const [text, tone] = statusMeta(value)
+  return <Badge text={text} tone={tone} />
 }
 
 export function Empty({ title, hint }) {
