@@ -1,7 +1,6 @@
 # Quy ước code — BlueMoon
 
-Tài liệu này quy định **cách viết code** cho dự án BlueMoon. Cách tổ chức tham khảo từ repo
-HR_Chan, nhưng nội dung đã đổi sang Spring Boot + React + MySQL.
+Tài liệu này quy định **cách viết code** cho dự án BlueMoon, dùng Spring Boot + React + MySQL.
 
 Đọc kèm:
 
