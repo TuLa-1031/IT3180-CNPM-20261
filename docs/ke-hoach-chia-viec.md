@@ -1,17 +1,19 @@
-# Kế hoạch chia việc — BlueMoon (26/11–06/12)
+# Kế hoạch chia việc — BlueMoon (26/11–10/12)
 
-Mục tiêu: hoàn thiện 5 nghiệp vụ (cư dân, thu phí, phản ánh, bảo trì, gửi xe), đăng nhập/phân quyền và cổng cư dân trong 11 ngày. Năm người, mỗi người một phần; Lâm làm nền móng và tài liệu, Đức Anh làm thu phí, Kiên làm cư dân, Đức làm phản ánh + gửi xe, Sơn làm bảo trì.
+Mục tiêu: hoàn thiện 5 nghiệp vụ (cư dân, thu phí, phản ánh, bảo trì, gửi xe), đăng nhập/phân quyền và cổng cư dân trong 15 ngày. Năm người, mỗi người một phần; Lâm làm nền móng và tài liệu, Đức Anh làm thu phí, Kiên làm cư dân, Đức làm phản ánh + gửi xe, Sơn làm bảo trì.
 
-**Hạn cuối: 06/12/2026. Demo: 06/12.**
+**Hạn cuối: 10/12/2026. Demo: 10/12.**
 
 ## 1. Lịch
 
 | Đợt | Ngày | Hạn chốt | Việc chung |
 |---|---|---|---|
-| 1 | 26–28/11 | 28/11 | Đăng nhập, tạo bảng, mỗi người có một màn hình đọc dữ liệu thật |
-| 2 | 29/11–01/12 | 01/12 | Thêm, sửa, xóa; làm form; cư dân xem hóa đơn |
-| 3 | 02–04/12 | 04/12 | Duyệt, đổi trạng thái, cư dân gửi phản ánh/đăng ký xe, kỹ thuật nhận việc |
-| 4 | 05–06/12 | 06/12 | Chạy lại tất cả, sửa lỗi, viết tài liệu, demo |
+| 1 | 26–29/11 | 29/11 | Đăng nhập, tạo bảng, mỗi người có một màn hình đọc dữ liệu thật |
+| 2 | 30/11–03/12 | 03/12 | Thêm, sửa, xóa; làm form; cư dân xem hóa đơn |
+| 3 | 04–07/12 | 07/12 | Duyệt, đổi trạng thái, cư dân gửi phản ánh/đăng ký xe, kỹ thuật nhận việc |
+| 4 | 08–10/12 | 10/12 | Chạy lại tất cả, sửa lỗi, viết tài liệu, demo |
+
+Ngày cuối mỗi đợt để dự phòng/hoàn thiện.
 
 ## 2. Ai làm gì
 
@@ -70,7 +72,7 @@ npm run build
 
 Tài khoản demo (mật khẩu `123456`): `admin`, `quanly`, `ketoan`, `kythuat`, `cudan`.
 
-## 7. Demo 06/12
+## 7. Demo 10/12
 
 Năm luồng: thêm hộ/nhân khẩu; tạo khoản thu → sinh hóa đơn → nộp → duyệt; gửi phản ánh → phản hồi; tạo thiết bị → giao việc → nghiệm thu; đăng ký xe → duyệt → cấp thẻ. Chi tiết từng việc ở file chi tiết, đợt 4.
 

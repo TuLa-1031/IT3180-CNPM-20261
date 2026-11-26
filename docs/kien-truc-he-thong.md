@@ -680,10 +680,10 @@ Không cắt: đăng nhập/phân quyền, CRUD 5 nghiệp vụ, duyệt yêu c�
 
 | Giai đoạn | Thời lượng | Mục tiêu | Kết quả kiểm chứng |
 |---|---|---|---|
-| GĐ1 — Nền tảng & khung | 3 ngày | JWT + RBAC, chuẩn API, DB v2, mỗi nghiệp vụ có entity/repo + API `GET` + trang danh sách | Đăng nhập 5 vai trò; 5 nhóm `GET` trả JSON; `mvn test` + `npm run build` pass |
-| GĐ2 — CRUD chính | 3 ngày | UC01 + UC02 CRUD end-to-end; mỗi nghiệp vụ có form thêm/sửa/xóa | Tạo hộ/nhân khẩu; sinh hóa đơn; nộp + duyệt thanh toán; công nợ đúng |
-| GĐ3 — Luồng nghiệp vụ & cổng cư dân | 3 ngày | UC03 + UC04 + UC05 hoàn chỉnh; cư dân dùng được; kỹ thuật cập nhật việc | 5 luồng demo được; cư dân không thấy dữ liệu hộ khác |
-| GĐ4 — Chốt & bàn giao | 2 ngày | Kiểm thử, seed, sửa lỗi, tài liệu, demo, tag | Demo 5 luồng; test/build xanh; tài liệu đủ; tag `v1.0` |
+| GĐ1 — Nền tảng & khung | 4 ngày | JWT + RBAC, chuẩn API, DB v2, mỗi nghiệp vụ có entity/repo + API `GET` + trang danh sách | Đăng nhập 5 vai trò; 5 nhóm `GET` trả JSON; `mvn test` + `npm run build` pass |
+| GĐ2 — CRUD chính | 4 ngày | UC01 + UC02 CRUD end-to-end; mỗi nghiệp vụ có form thêm/sửa/xóa | Tạo hộ/nhân khẩu; sinh hóa đơn; nộp + duyệt thanh toán; công nợ đúng |
+| GĐ3 — Luồng nghiệp vụ & cổng cư dân | 4 ngày | UC03 + UC04 + UC05 hoàn chỉnh; cư dân dùng được; kỹ thuật cập nhật việc | 5 luồng demo được; cư dân không thấy dữ liệu hộ khác |
+| GĐ4 — Chốt & bàn giao | 3 ngày | Kiểm thử, seed, sửa lỗi, tài liệu, demo, tag | Demo 5 luồng; test/build xanh; tài liệu đủ; tag `v1.0` |
 
 Lịch, phân công và hạn nằm trong `docs/ke-hoach-chia-viec.md`; chi tiết từng việc theo người nằm trong `docs/chi-tiet-cong-viec.md`.
 

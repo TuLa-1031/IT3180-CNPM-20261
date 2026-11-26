@@ -20,13 +20,15 @@ Thứ tự làm một việc: tạo bảng/migration → entity → repository �
 
 Quay lại [kế hoạch chia việc](ke-hoach-chia-viec.md) khi cần xem lịch, hạn, luật.
 
+Mỗi đợt có 1 ngày cuối để dự phòng: 29/11, 03/12, 07/12, 10/12. Task giữ nguyên thứ tự, chỉ dời ngày theo đợt.
+
 ## Lâm — nền móng + tài liệu
 
 File của bạn: `pom.xml`, `application.properties`, `security/`, `exception/`, `config/`, `enums/`, `dto/auth/`, `AuthService`, `AuthController`, `UserEntity`, `UserRepository`, `Notification*`, `HealthController`; `app/`, `lib/`, `components/ui.jsx`, `styles.css`, `App.jsx`, `main.jsx`, `vite.config.js`, `pages/Login.jsx`, `pages/Dashboard.jsx`, `pages/Statistics.jsx`, `pages/Account.jsx`, `features/_template/`, `features/notifications/`, `features/reports/`; `database/init_database.sql`, `migrations/*-uc00-auth.sql`, `migrations/*-notifications.sql`; `docs/`.
 
 Không sửa file ngoài danh sách này.
 
-### Đợt 1 · 26–28/11
+### Đợt 1 · 26–29/11
 
 **File làm việc:** `pom.xml`, `application.properties`, `security/`, `AuthController`, `AuthService`, `UserEntity`, `UserRepository`, `dto/auth/`, `exception/`, `config/CorsConfig`, `lib/auth.js`, `lib/apiClient.js`, `pages/Login.jsx`, `App.jsx`, `vite.config.js`, `app/`, `features/_template/`, `lib/resources.js`, `components/ui.jsx`, `lib/format.js`, `migrations/20261127-uc00-auth.sql`, `database/init_database.sql`, `docs/api-conventions.md`.
 
@@ -62,13 +64,13 @@ File: `app/`, `features/_template/`, `App.jsx`, `lib/resources.js`, `components/
 
 Xong khi: nhân viên vào giao diện nhân viên, cư dân vào giao diện cư dân; trang mẫu chạy; build không lỗi.
 
-### Đợt 2 · 29/11–01/12
+### Đợt 2 · 30/11–03/12
 
 **File làm việc:** `app/ResidentLayout.jsx`, `pages/Account.jsx`, `App.jsx`, `lib/resources.js`, `docs/api-conventions.md`.
 
 **Kết quả đầu ra:** `app/ResidentLayout.jsx`, `pages/Account.jsx`; route/resources đã kiểm tra; `docs/api-conventions.md` cập nhật.
 
-**G2-L1 · 29/11 (ngày 1) — Kiểm tra route/resources và xem code.**
+**G2-L1 · 30/11 (ngày 1) — Kiểm tra route/resources và xem code.**
 
 Việc: kiểm tra route/resources đã có từ G1; chỉ bổ sung nếu thiếu; xem code mọi người gửi; sửa lỗi tích hợp.
 
@@ -78,7 +80,7 @@ File: `App.jsx`, `lib/resources.js`.
 
 Xong khi: không còn trang/endpoint nào thiếu route/resources.
 
-**G2-L2 · 30/11 (ngày 2) — Làm khung giao diện cư dân.**
+**G2-L2 · 01/12 (ngày 2) — Làm khung giao diện cư dân.**
 
 Việc: làm menu cư dân; làm trang chờ cho hóa đơn, phản ánh, gửi xe, thông báo; làm trang đổi mật khẩu.
 
@@ -88,7 +90,7 @@ File: `app/ResidentLayout.jsx`, `pages/Account.jsx`.
 
 Xong khi: cư dân đăng nhập thấy menu của mình.
 
-**G2-L3 · 01/12 (ngày 3) — Chạy thử và sửa lỗi.**
+**G2-L3 · 02/12 (ngày 3) — Chạy thử và sửa lỗi.**
 
 Việc: chạy luồng thêm hộ, thêm nhân khẩu, tạo khoản thu, sinh hóa đơn, nộp tiền, duyệt tiền; sửa lỗi; cập nhật hướng dẫn API.
 
@@ -98,13 +100,13 @@ File: `docs/api-conventions.md`.
 
 Xong khi: luồng của Đức Anh và Kiên chạy được từ đầu đến cuối.
 
-### Đợt 3 · 02–04/12
+### Đợt 3 · 04–07/12
 
 **File làm việc:** `Notification*`, `migrations/*-notifications.sql`, `features/notifications/`, `features/reports/`, `app/ResidentHome.jsx`, `pages/Dashboard.jsx`, `pages/Statistics.jsx`.
 
 **Kết quả đầu ra:** `NotificationEntity/Repository/Service/Controller`, `migrations/*-notifications.sql`, `app/ResidentHome.jsx`, `pages/Dashboard.jsx`, `pages/Statistics.jsx`, `features/notifications/`, `features/reports/`.
 
-**G3-L1 · 02/12 (ngày 1) — Làm thông báo và thống kê.**
+**G3-L1 · 04/12 (ngày 1) — Làm thông báo và thống kê.**
 
 Việc: làm bảng thông báo và API đọc thông báo, đánh dấu đã đọc; làm API thống kê cơ bản.
 
@@ -116,7 +118,7 @@ Xong khi: có thông báo khi có việc mới; stats trả số liệu.
 
 Nếu chậm, bỏ phần thông báo, giữ thống kê cơ bản. Không ảnh hưởng năm phần chính.
 
-**G3-L2 · 03/12 (ngày 2) — Làm trang chủ cư dân và trang thống kê.**
+**G3-L2 · 05/12 (ngày 2) — Làm trang chủ cư dân và trang thống kê.**
 
 Việc: làm trang chủ cư dân tổng hợp hóa đơn, phản ánh, đăng ký xe, thông báo; làm lại trang tổng quan và trang thống kê để lấy số liệu thật.
 
@@ -126,7 +128,7 @@ File: `app/ResidentHome.jsx`, `pages/Dashboard.jsx`, `pages/Statistics.jsx`.
 
 Xong khi: cư dân thấy đúng dữ liệu của hộ mình; nhân viên thấy số liệu thật.
 
-**G3-L3 · 04/12 (ngày 3) — Chạy cả năm luồng và sửa lỗi.**
+**G3-L3 · 06/12 (ngày 3) — Chạy cả năm luồng và sửa lỗi.**
 
 Việc: chạy năm luồng chính; thử cư dân A xem dữ liệu hộ B (phải bị chặn); sửa lỗi; cập nhật tài liệu.
 
@@ -134,13 +136,13 @@ Cụ thể: Chạy 5 luồng; cư dân A mở hộ B phải 403; sửa lỗi; c�
 
 Xong khi: năm luồng chạy được, không lỗi chặn quyền.
 
-### Đợt 4 · 05–06/12
+### Đợt 4 · 08–10/12
 
 **File làm việc:** `database/init_database.sql`, `docs/**`, `README.md`.
 
 **Kết quả đầu ra:** `database/init_database.sql` hợp nhất 17 bảng; bộ tài liệu cuối; tag `v1.0`.
 
-**G4-L1 · 05/12 (ngày 1) — Gộp database và chạy lại toàn bộ.**
+**G4-L1 · 08/12 (ngày 1) — Gộp database và chạy lại toàn bộ.**
 
 Việc: gộp tất cả migration và dữ liệu mẫu vào `init_database.sql`; chạy trên MySQL sạch; chạy test backend; build frontend; sửa lỗi còn lại.
 
@@ -148,7 +150,7 @@ Cụ thể: Gộp 17 bảng + dữ liệu mẫu vào `init_database.sql`; chạy
 
 Xong khi: máy sạch làm đúng hướng dẫn trong README; test và build không lỗi.
 
-**G4-L2 · 06/12 (ngày 2) — Viết tài liệu, chạy thử demo, gắn phiên bản.**
+**G4-L2 · 09/12 (ngày 2) — Viết tài liệu, chạy thử demo, gắn phiên bản.**
 
 Việc: hoàn thiện spec, hướng dẫn API, mô tả database, báo cáo test, kịch bản demo, hướng dẫn sử dụng, slide; chạy thử demo năm luồng; gắn phiên bản `v1.0`.
 
@@ -162,7 +164,7 @@ File của bạn: `Fee*`, `Payment*`, `PaymentTransaction*`, `UtilityBill*`; `pa
 
 Không sửa file ngoài danh sách này.
 
-### Đợt 1 · 26–28/11
+### Đợt 1 · 26–29/11
 
 **File làm việc:** `migrations/20261127-uc02-payment-transactions.sql`, `PaymentTransaction*`, `Fee*`, `Payment*`, `UtilityBill*`, `dto/fee/`, `dto/payment/`, `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/api.js`, `tests/postman/uc02.json`.
 
@@ -208,13 +210,13 @@ File: `tests/postman/uc02.json`.
 
 Xong khi: 3 trang và 3 API chạy ổn; build không lỗi.
 
-### Đợt 2 · 29/11–01/12
+### Đợt 2 · 30/11–03/12
 
 **File làm việc:** `FeeService/Controller`, `PaymentService/Controller`, `PaymentTransaction*`, `UtilityBill*`, `dto/fee/`, `dto/payment/`, `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/pages/MyBills.jsx`, `tests/postman/uc02.json`.
 
 **Kết quả đầu ra:** `FeeService/Controller`, `PaymentService/Controller`, `PaymentTransaction*`, `UtilityBill*`; form 3 trang; `MyBills.jsx`; `tests/postman/uc02.json`.
 
-**G2-A1 · 29/11 (ngày 1) — Làm thêm, sửa, xóa khoản thu.**
+**G2-A1 · 30/11 (ngày 1) — Làm thêm, sửa, xóa khoản thu.**
 
 Việc: làm API thêm, sửa, xóa khoản thu; làm API sinh hóa đơn cho tất cả hộ đang ở; làm API đóng khoản thu.
 
@@ -224,7 +226,7 @@ File: `FeeService`, `FeeController`, `dto/fee/`.
 
 Xong khi: tạo một khoản thu, bấm sinh hóa đơn thì mỗi hộ đang ở có một dòng; bấm đóng thì không sinh thêm.
 
-**G2-A2 · 30/11 (ngày 2) — Làm nộp tiền, duyệt tiền, tính công nợ.**
+**G2-A2 · 01/12 (ngày 2) — Làm nộp tiền, duyệt tiền, tính công nợ.**
 
 Việc: làm API ghi nhận nộp tiền, duyệt hoặc từ chối; tính còn nợ; chặn nộp vượt số nợ; làm phần thu hộ điện nước.
 
@@ -234,7 +236,7 @@ File: `PaymentService`, `PaymentController`, `PaymentTransaction*`, `UtilityBill
 
 Xong khi: nộp một phần thì trạng thái là "nộp một phần"; duyệt đủ thì thành "đã nộp"; nộp vượt báo lỗi.
 
-**G2-A3 · 01/12 (ngày 3) — Làm form và trang cư dân.**
+**G2-A3 · 02/12 (ngày 3) — Làm form và trang cư dân.**
 
 Việc: làm form thêm, sửa, sinh, đóng trên trang khoản thu; làm form ghi nhận và duyệt tiền trên trang thu phí; làm trang thu hộ; làm trang cư dân xem hóa đơn và nộp tiền.
 
@@ -244,13 +246,13 @@ File: `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/
 
 Xong khi: làm được cả luồng trên màn hình, không phải gọi Postman; cập nhật `tests/postman/uc02.json`.
 
-### Đợt 3 · 02–04/12
+### Đợt 3 · 04–07/12
 
 **File làm việc:** `PaymentService/Controller`, `PaymentTransaction*`, `features/fees/pages/MyBills.jsx`, `tests/postman/uc02.json`.
 
 **Kết quả đầu ra:** Mã giao dịch + duyệt idempotent; lịch sử/biên lai cư dân; `tests/postman/uc02.json`.
 
-**G3-A1 · 02/12 (ngày 1) — Hoàn thiện duyệt tiền và biên lai (UC02).**
+**G3-A1 · 04/12 (ngày 1) — Hoàn thiện duyệt tiền và biên lai (UC02).**
 
 Việc: kiểm tra lại luồng duyệt/từ chối giao dịch; thêm mã giao dịch; sửa lỗi cộng trừ công nợ.
 
@@ -260,7 +262,7 @@ File: `PaymentService`, `PaymentController`, `PaymentTransaction*`.
 
 Xong khi: duyệt/từ chối đúng; công nợ sau mỗi giao dịch đúng; mỗi giao dịch có mã.
 
-**G3-A2 · 03/12 (ngày 2) — Làm trang lịch sử giao dịch và biên lai cho cư dân (UC02).**
+**G3-A2 · 05/12 (ngày 2) — Làm trang lịch sử giao dịch và biên lai cho cư dân (UC02).**
 
 Việc: làm trang cư dân xem lịch sử các lần nộp, xem mã giao dịch và biên lai; kiểm tra cư dân chỉ thấy hộ mình.
 
@@ -270,7 +272,7 @@ File: `features/fees/pages/MyBills.jsx`, `PaymentController`.
 
 Xong khi: cư dân xem được lịch sử và biên lai; chỉ thấy hộ mình.
 
-**G3-A3 · 04/12 (ngày 3) — Chạy lại UC02 và hỗ trợ tích hợp.**
+**G3-A3 · 06/12 (ngày 3) — Chạy lại UC02 và hỗ trợ tích hợp.**
 
 Việc: chạy lại toàn bộ luồng thu phí; sửa lỗi; cập nhật Postman; hỗ trợ Lâm kiểm tra.
 
@@ -280,13 +282,13 @@ File: `tests/postman/uc02.json`.
 
 Xong khi: UC02 chạy từ đầu đến cuối; Postman đủ.
 
-### Đợt 4 · 05–06/12
+### Đợt 4 · 08–10/12
 
 **File làm việc:** `database/seed/uc02.sql`, `tests/postman/uc02.json`.
 
 **Kết quả đầu ra:** `database/seed/uc02.sql` (6 khoản thu, 10 giao dịch); demo UC02.
 
-**G4-A1 · 05/12 (ngày 1) — Chạy lại thu phí và công nợ (UC02).**
+**G4-A1 · 08/12 (ngày 1) — Chạy lại thu phí và công nợ (UC02).**
 
 Việc: chạy lại các luồng; viết dữ liệu mẫu cho khoản thu, thanh toán; sửa lỗi.
 
@@ -294,7 +296,7 @@ Cụ thể: Chạy lại UC02; tạo dữ liệu mẫu 6 khoản thu, 10 giao d�
 
 Xong khi: các luồng chạy ổn; dữ liệu mẫu đủ để demo.
 
-**G4-A2 · 06/12 (ngày 2) — Demo phần thu phí và công nợ (UC02).**
+**G4-A2 · 09/12 (ngày 2) — Demo phần thu phí và công nợ (UC02).**
 
 Việc: chuẩn bị tài khoản, dữ liệu, kịch bản; demo.
 
@@ -308,7 +310,7 @@ File của bạn: `Household*`, `Resident*`, `ResidenceChange*`; `pages/Househol
 
 Không sửa file ngoài danh sách này.
 
-### Đợt 1 · 26–28/11
+### Đợt 1 · 26–29/11
 
 **File làm việc:** `dto/household/`, `dto/resident/`, `dto/change/`, `Household*`, `Resident*`, `ResidenceChange*`, `pages/Households.jsx`, `pages/Residents.jsx`, `pages/Changes.jsx`, `features/households/api.js`, `tests/postman/uc01.json`.
 
@@ -344,13 +346,13 @@ File: `features/households/constants.js`, `tests/postman/uc01.json`.
 
 Xong khi: lọc chạy; build không lỗi.
 
-### Đợt 2 · 29/11–01/12
+### Đợt 2 · 30/11–03/12
 
 **File làm việc:** `HouseholdService/Controller`, `ResidentService/Controller`, `ResidenceChangeService/Controller`, `dto/*`, `pages/Households.jsx`, `pages/Residents.jsx`, `pages/Changes.jsx`, `tests/postman/uc01.json`.
 
 **Kết quả đầu ra:** `HouseholdService/Controller`, `ResidentService/Controller`, `ResidenceChangeService/Controller`; form 3 trang; `tests/postman/uc01.json`.
 
-**G2-K1 · 29/11 (ngày 1) — Làm thêm, sửa, xóa hộ.**
+**G2-K1 · 30/11 (ngày 1) — Làm thêm, sửa, xóa hộ.**
 
 Việc: làm API thêm, sửa, xóa hộ; kiểm tra trùng mã hộ; không cho xóa hộ đã có tiền hoặc nhân khẩu.
 
@@ -360,7 +362,7 @@ File: `HouseholdService`, `HouseholdController`, `dto/household/`.
 
 Xong khi: thêm được hộ mới; sửa được; trùng mã báo lỗi; xóa hộ đã có tiền bị chặn.
 
-**G2-K2 · 30/11 (ngày 2) — Làm nhân khẩu và biến động.**
+**G2-K2 · 01/12 (ngày 2) — Làm nhân khẩu và biến động.**
 
 Việc: làm API thêm, sửa, xóa nhân khẩu; kiểm tra trùng CCCD; làm API ghi nhận tạm trú, tạm vắng, chuyển đến, chuyển đi.
 
@@ -370,7 +372,7 @@ File: `ResidentService`, `ResidentController`, `ResidenceChangeService`, `Reside
 
 Xong khi: thêm được nhân khẩu; trùng CCCD báo lỗi; ghi được một lần chuyển đi.
 
-**G2-K3 · 01/12 (ngày 3) — Làm form hộ, nhân khẩu, biến động.**
+**G2-K3 · 02/12 (ngày 3) — Làm form hộ, nhân khẩu, biến động.**
 
 Việc: làm form thêm, sửa, xóa trên trang hộ, nhân khẩu, biến động; thêm lọc.
 
@@ -380,13 +382,13 @@ File: `pages/Households.jsx`, `pages/Residents.jsx`, `pages/Changes.jsx`.
 
 Xong khi: làm được trên màn hình, thông báo lỗi bằng tiếng Việt.
 
-### Đợt 3 · 02–04/12
+### Đợt 3 · 04–07/12
 
 **File làm việc:** `pages/Changes.jsx`, `HouseholdService`, `features/households/pages/MyHousehold.jsx`, `tests/postman/uc01.json`.
 
 **Kết quả đầu ra:** Trang biến động đầy đủ; quy tắc `MOVED_OUT`; `MyHousehold.jsx`; `tests/postman/uc01.json`.
 
-**G3-K1 · 02/12 (ngày 1) — Làm trang biến động và quy tắc hộ chuyển đi.**
+**G3-K1 · 04/12 (ngày 1) — Làm trang biến động và quy tắc hộ chuyển đi.**
 
 Việc: làm form biến động đầy đủ; chặn thao tác trên hộ đã chuyển đi; thêm tìm kiếm và phân trang.
 
@@ -396,7 +398,7 @@ File: `pages/Changes.jsx`, `HouseholdService`.
 
 Xong khi: ghi được chuyển đi; hộ đã chuyển đi không nhận hóa đơn mới.
 
-**G3-K2 · 03/12 (ngày 2) — Làm trang cư dân xem hộ mình.**
+**G3-K2 · 05/12 (ngày 2) — Làm trang cư dân xem hộ mình.**
 
 Việc: làm trang cư dân xem thông tin hộ và nhân khẩu của mình; sửa thông báo lỗi.
 
@@ -406,7 +408,7 @@ File: `features/households/pages/MyHousehold.jsx`.
 
 Xong khi: cư dân chỉ thấy hộ mình.
 
-**G3-K3 · 04/12 (ngày 3) — Chạy lại phần cư dân và căn hộ.**
+**G3-K3 · 06/12 (ngày 3) — Chạy lại phần cư dân và căn hộ.**
 
 Việc: chạy lại các luồng; sửa lỗi; viết Postman.
 
@@ -416,13 +418,13 @@ File: `tests/postman/uc01.json`.
 
 Xong khi: phần cư dân và căn hộ chạy ổn.
 
-### Đợt 4 · 05–06/12
+### Đợt 4 · 08–10/12
 
 **File làm việc:** `database/seed/uc01.sql`.
 
 **Kết quả đầu ra:** `database/seed/uc01.sql` (8 hộ, 13 nhân khẩu, 3 biến động); demo UC01.
 
-**G4-K1 · 05/12 (ngày 1) — Chạy lại cư dân và căn hộ.**
+**G4-K1 · 08/12 (ngày 1) — Chạy lại cư dân và căn hộ.**
 
 Việc: chạy lại các luồng; viết dữ liệu mẫu cho hộ, nhân khẩu, biến động; sửa lỗi.
 
@@ -430,7 +432,7 @@ Cụ thể: Chạy lại UC01; tạo dữ liệu mẫu 8 hộ, 13 nhân khẩu, 
 
 Xong khi: các luồng chạy ổn; dữ liệu mẫu đủ để demo.
 
-**G4-K2 · 06/12 (ngày 2) — Demo phần cư dân và căn hộ.**
+**G4-K2 · 09/12 (ngày 2) — Demo phần cư dân và căn hộ.**
 
 Việc: chuẩn bị kịch bản; demo.
 
@@ -444,7 +446,7 @@ File của bạn: `Feedback*`, `Vehicle*`, `VehicleRegistration*`, `ParkingCard*
 
 Không sửa file ngoài danh sách này.
 
-### Đợt 1 · 26–28/11
+### Đợt 1 · 26–29/11
 
 **File làm việc:** `migrations/20261127-uc03-feedbacks.sql`, `Feedback*`, `features/feedbacks/api.js`, `features/feedbacks/constants.js`, `features/feedbacks/pages/FeedbackList.jsx`, `features/feedbacks/pages/FeedbackDetail.jsx`, `tests/postman/uc03.json`, `migrations/20261127-uc05-vehicle-registrations.sql`, `VehicleRegistration*`, `ParkingCard*`.
 
@@ -490,13 +492,13 @@ File: `migrations/20261127-uc05-vehicle-registrations.sql`, `VehicleRegistration
 
 Xong khi: chạy migration; app nhận đúng 2 bảng.
 
-### Đợt 2 · 29/11–01/12
+### Đợt 2 · 30/11–03/12
 
 **File làm việc:** `FeedbackService/Controller`, `features/feedbacks/pages/FeedbackDetail.jsx`, `features/feedbacks/pages/FeedbackList.jsx`, `features/feedbacks/pages/FeedbackStats.jsx`, `VehicleRegistrationService/Controller`, `ParkingCardService/Controller`, `VehicleService/Controller`, `tests/postman/uc03.json`.
 
 **Kết quả đầu ra:** `FeedbackService/Controller`, 3 trang feedback; `VehicleRegistrationService/Controller`, `ParkingCardService/Controller`, `VehicleService/Controller`; `tests/postman/uc03.json`.
 
-**G2-D1 · 29/11 (ngày 1) — Làm đổi trạng thái và trả lời phản ánh.**
+**G2-D1 · 30/11 (ngày 1) — Làm đổi trạng thái và trả lời phản ánh.**
 
 Việc: làm API đổi trạng thái (mới, đang xử lý, đã xử lý, từ chối); làm API trả lời, lưu người trả lời và thời gian.
 
@@ -506,7 +508,7 @@ File: `FeedbackService`, `FeedbackController`.
 
 Xong khi: đổi trạng thái được; trả lời xong thì phản ánh có nội dung trả lời.
 
-**G2-D2 · 30/11 (ngày 2) — Làm gộp phản ánh và thống kê quý.**
+**G2-D2 · 01/12 (ngày 2) — Làm gộp phản ánh và thống kê quý.**
 
 Việc: làm API gộp các phản ánh giống nhau; làm API đếm theo trạng thái trong một quý; làm form trả lời, giao diện chọn nhiều để gộp và bảng thống kê.
 
@@ -516,7 +518,7 @@ File: `FeedbackService`, `FeedbackController`, `features/feedbacks/pages/Feedbac
 
 Xong khi: gộp được trên màn hình; thống kê hiện đúng.
 
-**G2-D3 · 01/12 (ngày 3) — Làm đăng ký gửi xe (UC05).**
+**G2-D3 · 02/12 (ngày 3) — Làm đăng ký gửi xe (UC05).**
 
 Việc: làm API gửi yêu cầu đăng ký; duyệt thì tạo xe và cấp thẻ; từ chối thì bắt buộc nhập lý do; làm API khóa thẻ và cấp lại thẻ; làm API thêm, sửa, xóa xe.
 
@@ -526,13 +528,13 @@ File: `VehicleRegistrationService`, `VehicleRegistrationController`, `ParkingCar
 
 Xong khi: duyệt một yêu cầu thì có xe và thẻ; duyệt lại yêu cầu đã duyệt bị chặn; từ chối không có lý do bị chặn.
 
-### Đợt 3 · 02–04/12
+### Đợt 3 · 04–07/12
 
 **File làm việc:** `features/feedbacks/pages/MyFeedbacks.jsx`, `tests/postman/uc03.json`, `features/vehicles/pages/VehicleRegistrations.jsx`, `features/vehicles/pages/ParkingCards.jsx`, `features/vehicles/pages/MyRegistration.jsx`, `pages/Vehicles.jsx`, `features/vehicles/api.js`, `tests/postman/uc05.json`.
 
 **Kết quả đầu ra:** `MyFeedbacks.jsx`; 3 trang UC05 + nối trang Phương tiện; `tests/postman/uc03.json`, `tests/postman/uc05.json`.
 
-**G3-D1 · 02/12 (ngày 1) — Làm trang cư dân gửi và theo dõi phản ánh (UC03).**
+**G3-D1 · 04/12 (ngày 1) — Làm trang cư dân gửi và theo dõi phản ánh (UC03).**
 
 Việc: làm form gửi phản ánh; làm danh sách phản ánh của chính mình; hiện trạng thái và trả lời; chạy lại UC03.
 
@@ -542,7 +544,7 @@ File: `features/feedbacks/pages/MyFeedbacks.jsx`, `tests/postman/uc03.json`.
 
 Xong khi: cư dân gửi được; chỉ thấy phản ánh của mình; UC03 chạy ổn.
 
-**G3-D2 · 03/12 (ngày 2) — Làm 3 trang quản lý và trang cư dân gửi xe (UC05).**
+**G3-D2 · 05/12 (ngày 2) — Làm 3 trang quản lý và trang cư dân gửi xe (UC05).**
 
 Việc: làm trang danh sách yêu cầu, trang thẻ gửi xe; nối trang Phương tiện vào API; làm trang cư dân đăng ký xe và xem trạng thái.
 
@@ -552,7 +554,7 @@ File: `features/vehicles/pages/VehicleRegistrations.jsx`, `features/vehicles/pag
 
 Xong khi: cư dân gửi được; ban quản lý duyệt được; thẻ hiện đúng trạng thái; trang Phương tiện hiện dữ liệu thật.
 
-**G3-D3 · 04/12 (ngày 3) — Chạy thử và viết Postman (UC05).**
+**G3-D3 · 06/12 (ngày 3) — Chạy thử và viết Postman (UC05).**
 
 Việc: chạy lại cả luồng; sửa lỗi; viết Postman.
 
@@ -562,13 +564,13 @@ File: `tests/postman/uc05.json`.
 
 Xong khi: luồng gửi xe chạy từ đầu đến cuối.
 
-### Đợt 4 · 05–06/12
+### Đợt 4 · 08–10/12
 
 **File làm việc:** `database/seed/uc03.sql`, `database/seed/uc05.sql`.
 
 **Kết quả đầu ra:** `database/seed/uc03.sql` (3 phản ánh), `database/seed/uc05.sql` (2 đăng ký, 2 thẻ); demo UC03 + UC05.
 
-**G4-D1 · 05/12 (ngày 1) — Chạy lại phản ánh và gửi xe (tách 2 nhánh: UC03 và UC05).**
+**G4-D1 · 08/12 (ngày 1) — Chạy lại phản ánh và gửi xe (tách 2 nhánh: UC03 và UC05).**
 
 Việc: chạy lại các luồng; viết dữ liệu mẫu cho phản ánh, xe, đăng ký, thẻ; sửa lỗi.
 
@@ -576,7 +578,7 @@ Cụ thể: Chạy lại UC03 + UC05; tạo dữ liệu mẫu 3 phản ánh, 2 �
 
 Xong khi: các luồng chạy ổn; dữ liệu mẫu đủ để demo.
 
-**G4-D2 · 06/12 (ngày 2) — Demo phần phản ánh và gửi xe (mỗi UC một nhánh).**
+**G4-D2 · 09/12 (ngày 2) — Demo phần phản ánh và gửi xe (mỗi UC một nhánh).**
 
 Việc: chuẩn bị kịch bản; demo.
 
@@ -590,7 +592,7 @@ File của bạn: `Equipment*`, `MaintenanceSchedule*`, `MaintenanceTask*`, `Tec
 
 Không sửa file ngoài danh sách này.
 
-### Đợt 1 · 26–28/11
+### Đợt 1 · 26–29/11
 
 **File làm việc:** `migrations/20261127-uc04-maintenance.sql`, `Equipment*`, `MaintenanceSchedule*`, `MaintenanceTask*`, `Technician*`, `features/maintenance/api.js`, `features/maintenance/pages/EquipmentList.jsx`, `features/maintenance/pages/ScheduleList.jsx`, `features/maintenance/pages/TaskList.jsx`, `tests/postman/uc04.json`.
 
@@ -628,13 +630,13 @@ Xong khi: 3 trang chạy; build không lỗi.
 
 Cuối đợt 1, Lâm tạo database sạch, chạy `init_database.sql` và tất cả migration, chạy test backend và build frontend; đăng nhập 5 tài khoản; gọi 5 nhóm API đọc. Nếu lỗi, đợt 2 bắt đầu bằng sửa lỗi.
 
-### Đợt 2 · 29/11–01/12
+### Đợt 2 · 30/11–03/12
 
 **File làm việc:** `EquipmentService/Controller`, `MaintenanceScheduleService/Controller`, `MaintenanceTaskService/Controller`, `TechnicianService/Controller`, `features/maintenance/pages/EquipmentList.jsx`, `features/maintenance/pages/ScheduleList.jsx`, `features/maintenance/pages/TaskList.jsx`, `tests/postman/uc04.json`.
 
 **Kết quả đầu ra:** `EquipmentService/Controller`, `MaintenanceScheduleService/Controller`, `MaintenanceTaskService/Controller`, `TechnicianService/Controller`; form 3 trang; `tests/postman/uc04.json`.
 
-**G2-S1 · 29/11 (ngày 1) — Làm thiết bị và lịch bảo trì.**
+**G2-S1 · 30/11 (ngày 1) — Làm thiết bị và lịch bảo trì.**
 
 Việc: làm API thêm, sửa, xóa thiết bị; làm API tạo lịch bảo trì cho thiết bị.
 
@@ -644,7 +646,7 @@ File: `EquipmentService`, `MaintenanceScheduleService`, `EquipmentController`, `
 
 Xong khi: thêm được thiết bị; tạo được lịch cho thiết bị đó.
 
-**G2-S2 · 30/11 (ngày 2) — Làm công việc và giao việc.**
+**G2-S2 · 01/12 (ngày 2) — Làm công việc và giao việc.**
 
 Việc: làm API thêm, sửa, xóa công việc; giao việc cho kỹ thuật; đổi trạng thái; quản lý danh sách kỹ thuật viên.
 
@@ -654,7 +656,7 @@ File: `MaintenanceTaskService`, `MaintenanceTaskController`, `TechnicianService`
 
 Xong khi: tạo được việc; giao được cho một kỹ thuật viên; đổi trạng thái được.
 
-**G2-S3 · 01/12 (ngày 3) — Làm form thiết bị, lịch, công việc.**
+**G2-S3 · 02/12 (ngày 3) — Làm form thiết bị, lịch, công việc.**
 
 Việc: làm form thêm, sửa, giao việc trên trang thiết bị, lịch, công việc.
 
@@ -666,13 +668,13 @@ Xong khi: làm được trên màn hình.
 
 Cuối đợt 2, Lâm chạy lại luồng hộ, nhân khẩu, khoản thu, hóa đơn, nộp tiền, duyệt tiền và kiểm tra công nợ.
 
-### Đợt 3 · 02–04/12
+### Đợt 3 · 04–07/12
 
 **File làm việc:** `features/maintenance/pages/MyTasks.jsx`, `features/maintenance/pages/MaintenanceHistory.jsx`, `MaintenanceTaskService/Controller`, `tests/postman/uc04.json`.
 
 **Kết quả đầu ra:** `MyTasks.jsx`; nghiệm thu + lịch sử; `tests/postman/uc04.json`.
 
-**G3-S1 · 02/12 (ngày 1) — Làm trang kỹ thuật nhận việc.**
+**G3-S1 · 04/12 (ngày 1) — Làm trang kỹ thuật nhận việc.**
 
 Việc: làm trang "Việc của tôi" cho kỹ thuật; cho cập nhật trạng thái từ "đang làm" sang "xong".
 
@@ -682,7 +684,7 @@ File: `features/maintenance/pages/MyTasks.jsx`, `MaintenanceTaskController`.
 
 Xong khi: kỹ thuật chỉ thấy việc của mình; cập nhật được trạng thái.
 
-**G3-S2 · 03/12 (ngày 2) — Làm nghiệm thu và lịch sử.**
+**G3-S2 · 05/12 (ngày 2) — Làm nghiệm thu và lịch sử.**
 
 Việc: làm API nghiệm thu việc đã xong; làm trang lịch sử bảo trì.
 
@@ -692,7 +694,7 @@ File: `MaintenanceTaskService`, `features/maintenance/pages/MaintenanceHistory.j
 
 Xong khi: quản lý nghiệm thu được; lịch sử hiện đúng.
 
-**G3-S3 · 04/12 (ngày 3) — Chạy lại phần bảo trì.**
+**G3-S3 · 06/12 (ngày 3) — Chạy lại phần bảo trì.**
 
 Việc: chạy lại các luồng; sửa lỗi; viết Postman.
 
@@ -704,13 +706,13 @@ Xong khi: phần bảo trì chạy ổn.
 
 Cuối đợt 3, Lâm chạy cả năm luồng và kiểm tra quyền: cư dân chỉ thấy dữ liệu của mình, kỹ thuật chỉ thấy việc của mình.
 
-### Đợt 4 · 05–06/12
+### Đợt 4 · 08–10/12
 
 **File làm việc:** `database/seed/uc04.sql`.
 
 **Kết quả đầu ra:** `database/seed/uc04.sql` (4 thiết bị, 3 lịch, 3 việc); demo UC04.
 
-**G4-S1 · 05/12 (ngày 1) — Chạy lại bảo trì.**
+**G4-S1 · 08/12 (ngày 1) — Chạy lại bảo trì.**
 
 Việc: chạy lại các luồng; viết dữ liệu mẫu cho thiết bị, lịch, công việc; sửa lỗi.
 
@@ -718,7 +720,7 @@ Cụ thể: Chạy lại UC04; tạo dữ liệu mẫu 4 thiết bị, 3 lịch,
 
 Xong khi: các luồng chạy ổn; dữ liệu mẫu đủ để demo.
 
-**G4-S2 · 06/12 (ngày 2) — Demo phần bảo trì.**
+**G4-S2 · 09/12 (ngày 2) — Demo phần bảo trì.**
 
 Việc: chuẩn bị kịch bản; demo.
 
