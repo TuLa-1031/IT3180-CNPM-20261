@@ -46,8 +46,8 @@ Vài sự thật về repo để khỏi mất thời gian phát hiện lại:
 **1. Đọc trước khi viết.** Trước khi sửa, phải giải thích được phần đó đang chạy thế nào và thay
 đổi của bạn chạm vào đâu. Không hiểu thì chưa được sửa.
 
-**2. Một task = một nhánh = một PR nhỏ.** Mỗi task một commit trở lên, mỗi giai đoạn một nhánh
-riêng của từng người. PR ≤ 400 dòng; lớn hơn thì tách task.
+**2. Mỗi giai đoạn một nhánh/người; mỗi task một commit.** Đức tách hai nhánh cho UC03/UC05.
+Task lớn tách nhánh riêng. PR ≤ 400 dòng; lớn hơn thì tách.
 
 **3. Không sửa file của người khác — dù chỉ một dòng.** Không dọn dẹp, không format lại, không
 đổi thứ tự import, không đổi tên biến, không xóa code "trông thừa". Chỉ thêm mới hoặc sửa đúng
@@ -220,8 +220,9 @@ Nếu bạn dùng AI mà nó không nhận được SCOPE, nó phải hỏi lạ
 **Cần đổi file dùng chung:** nhắn Lâm mô tả thay đổi, chờ Lâm sửa (hoặc cho phép). Không tự sửa
 rồi báo sau.
 
-**Route và `lib/resources.js`:** Lâm cập nhật đầu mỗi giai đoạn. Trước ngày cuối giai đoạn trước,
-gửi Lâm danh sách `path + component` và `endpoint + shape response` của phần bạn làm.
+**Route và `lib/resources.js`:** Lâm chốt toàn bộ route và entry resources ở GĐ1; nếu thiếu thì
+bổ sung trước khi người khác bắt đầu dùng. Trước ngày cuối giai đoạn trước, gửi Lâm danh sách
+`path + component` và `endpoint + shape response` của phần bạn làm.
 
 **Migration:** mỗi người một file riêng, không sửa file đã chạy. Seed đặt trong
 `database/seed/uc0X.sql`, dùng `INSERT IGNORE` để chạy lại không lỗi.

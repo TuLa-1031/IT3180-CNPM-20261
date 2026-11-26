@@ -25,7 +25,7 @@ Mục tiêu: hoàn thiện 5 nghiệp vụ (cư dân, thu phí, phản ánh, b�
 
 Dấu `*` là entity, repository, service, controller, DTO cùng tên. Danh sách file đầy đủ ở `docs/chi-tiet-cong-viec.md`, phần "File của bạn" của từng người.
 
-## 3. Hôm nay 26/11
+## 3. Ngày đầu 26/11
 
 | Ai | Việc | Xong khi |
 |---|---|---|
@@ -34,6 +34,8 @@ Dấu `*` là entity, repository, service, controller, DTO cùng tên. Danh sác
 | Kiên | G1-K1 — viết class nhận/trả dữ liệu hộ, nhân khẩu, biến động | Code chạy; giải thích được quan hệ hộ → nhân khẩu |
 | Đức | G1-D1 — tạo bảng `feedbacks` | Migration chạy; app nhận đúng bảng |
 | Sơn | G1-S1 — tạo 4 bảng thiết bị, lịch, công việc, kỹ thuật viên | Migration chạy; app nhận đủ 4 bảng |
+
+Các ngày sau, mỗi người xem nhóm việc theo ngày ở file chi tiết.
 
 ## 4. Luật ngắn
 
@@ -45,7 +47,7 @@ Dấu `*` là entity, repository, service, controller, DTO cùng tên. Danh sác
 
 ## 5. Đọc ở đâu
 
-- **Việc của bạn, từng ngày:** [`docs/chi-tiet-cong-viec.md`](chi-tiet-cong-viec.md) — mở đúng tên mình. Có mã task, việc, file, cụ thể, xong khi.
+- **Việc của bạn, từng ngày:** [`docs/chi-tiet-cong-viec.md`](chi-tiet-cong-viec.md) — mở đúng tên mình. Mỗi đợt có **File làm việc**, **Kết quả đầu ra**, rồi từng task với mã, việc, file, cụ thể, xong khi.
 - **Sản phẩm làm ra cái gì:** `docs/kien-truc-he-thong.md` — phạm vi, dữ liệu, API, quyền.
 - **Cách làm, SCOPE, dùng AI:** `AGENTS.md`.
 
@@ -71,3 +73,7 @@ Tài khoản demo (mật khẩu `123456`): `admin`, `quanly`, `ketoan`, `kythuat
 ## 7. Demo 06/12
 
 Năm luồng: thêm hộ/nhân khẩu; tạo khoản thu → sinh hóa đơn → nộp → duyệt; gửi phản ánh → phản hồi; tạo thiết bị → giao việc → nghiệm thu; đăng ký xe → duyệt → cấp thẻ. Chi tiết từng việc ở file chi tiết, đợt 4.
+
+## 8. Nếu trễ
+
+Cắt theo thứ tự: thông báo trong ứng dụng → biểu đồ thống kê → gộp phản ánh trùng → cấp lại thẻ gửi xe. Không cắt 5 luồng chính, đăng nhập/phân quyền, CRUD, duyệt yêu cầu.
