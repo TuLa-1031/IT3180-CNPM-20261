@@ -33,12 +33,13 @@ public class AuthService {
                 .orElseThrow(() -> new BusinessException(
                         "INVALID_CREDENTIALS", HttpStatus.UNAUTHORIZED, INVALID_CREDENTIALS_MESSAGE));
 
-        if (!"ACTIVE".equals(user.getStatus())) {
-            throw new BusinessException("ACCOUNT_LOCKED", HttpStatus.FORBIDDEN, "Tài khoản đã bị khóa");
-        }
-
+        // Kiểm tra mật khẩu trước để sai mật khẩu luôn trả 401, không tiết lộ trạng thái khóa.
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new BusinessException("INVALID_CREDENTIALS", HttpStatus.UNAUTHORIZED, INVALID_CREDENTIALS_MESSAGE);
+        }
+
+        if (!"ACTIVE".equals(user.getStatus())) {
+            throw new BusinessException("ACCOUNT_LOCKED", HttpStatus.FORBIDDEN, "Tài khoản đã bị khóa");
         }
 
         return new AuthResponse(jwtTokenProvider.generateToken(user), toUserResponse(user));
