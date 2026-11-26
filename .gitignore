@@ -1,5 +1,8 @@
 docs/*
 
+# Skill riêng của Lâm, không đẩy lên GitHub
+.agents/
+
 # Biến môi trường (không đẩy mật khẩu lên Git)
 .env
 backend/.env
