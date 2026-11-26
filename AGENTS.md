@@ -36,9 +36,8 @@ Vài sự thật về repo để khỏi mất thời gian phát hiện lại:
   cái mà task của bạn cần.
 - Test backend là `@SpringBootTest`, cần MySQL đang chạy với `bluemoon_db`. Frontend **không có**
   test runner — đừng dựng thêm, hãy chạy app để kiểm.
-- `docs/*` đang bị `.gitignore` nên clone về có thể **không có** thư mục `docs/`; thiếu thì xin
-  Lâm. `.agents/` (skill riêng của Lâm) chưa commit. Không cần — và không được — sửa hai chỗ này
-  để "cho tiện".
+- `docs/` đã được đẩy lên GitHub cùng code. `.agents/` (skill riêng của Lâm) bị `.gitignore` và
+  không commit; không cần — và không được — sửa `.agents/` để "cho tiện".
 
 ---
 
