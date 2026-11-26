@@ -128,8 +128,9 @@ Ký hiệu: **F** toàn quyền, **R** chỉ đọc, **O** chỉ dữ liệu c�
 | Thiết bị, lịch bảo trì | F | F | — | R | — |
 | Công việc bảo trì | F | F | — | O + cập nhật tiến độ | — |
 | Đăng ký gửi xe, thẻ gửi xe | F | F | R | — | O + tạo mới |
+| Phương tiện | F | F | R | — | — |
 | Báo cáo, thống kê | F | F | F | — | — |
-| Thông báo | F | F | R | R | O |
+| Thông báo | O | O | O | O | O |
 
 Quy tắc bổ sung:
 
@@ -150,7 +151,7 @@ Quy tắc bổ sung:
 | UC01 | Quản lý cư dân và căn hộ | Ban quản lý, Cư dân (xem) | CRUD hộ gia đình, nhân khẩu; tìm kiếm, lọc; ghi nhận biến động (tạm trú, tạm vắng, chuyển đến/đi); xem hồ sơ hộ | Hộ: `ACTIVE`, `MOVED_OUT`; nhân khẩu: `PERMANENT`, `TEMPORARY_RESIDENCE`, `TEMPORARY_ABSENCE`, `MOVED_OUT` | Hộ gia đình, Nhân khẩu, Biến động |
 | UC02 | Quản lý thu phí và công nợ | Kế toán, Cư dân (thanh toán) | CRUD khoản thu; sinh hóa đơn hàng loạt; ghi nhận thanh toán (tiền mặt/chuyển khoản), thanh toán một phần; duyệt giao dịch; theo dõi công nợ; thu hộ điện nước; biên lai | Khoản thu: `OPEN`, `CLOSED`; hóa đơn: `UNPAID`, `PARTIAL`, `PAID`; giao dịch: `PENDING`, `APPROVED`, `REJECTED` | Khoản thu, Thu phí, Thu hộ, Công nợ (cư dân) |
 | UC03 | Quản lý phản ánh, yêu cầu dịch vụ | Cư dân, Ban quản lý, Kỹ thuật | Gửi phản ánh; phân loại, ưu tiên; giao việc; cập nhật phản hồi; gộp yêu cầu trùng; thống kê theo quý | `NEW`, `IN_PROGRESS`, `RESOLVED`, `REJECTED` | Phản ánh (Admin), Gửi phản ánh (Cư dân) |
-| UC04 | Quản lý bảo trì và vận hành | Ban quản lý, Kỹ thuật | CRUD thiết bị; lập lịch bảo trì định kỳ; ghi nhận sự cố; phân công kỹ thuật; cập nhật tiến độ, kết quả; nghiệm thu; lịch sử bảo trì | Công việc: `PENDING`, `IN_PROGRESS`, `DONE`, `CANCELLED`; thiết bị: `ACTIVE`, `BROKEN`, `MAINTENANCE` | Thiết bị, Lịch bảo trì, Công việc (Admin + Kỹ thuật) |
+| UC04 | Quản lý bảo trì và vận hành | Ban quản lý, Kỹ thuật | CRUD thiết bị; CRUD lịch bảo trì định kỳ; ghi nhận sự cố; phân công kỹ thuật; cập nhật tiến độ, kết quả; nghiệm thu; lịch sử bảo trì | Công việc: `PENDING`, `IN_PROGRESS`, `DONE`, `CANCELLED`; thiết bị: `ACTIVE`, `BROKEN`, `MAINTENANCE` | Thiết bị, Lịch bảo trì, Công việc (Admin + Kỹ thuật) |
 | UC05 | Quản lý đăng ký gửi xe, thẻ gửi xe | Cư dân, Ban quản lý | Gửi yêu cầu đăng ký xe; duyệt/từ chối kèm lý do; tạo hồ sơ phương tiện; cấp thẻ; khóa, cấp lại thẻ; lịch sử | Yêu cầu: `PENDING`, `APPROVED`, `REJECTED`; xe: `ACTIVE`, `INACTIVE`; thẻ: `ACTIVE`, `LOCKED`, `REPLACED` | Đăng ký gửi xe (Cư dân), Duyệt đăng ký, Thẻ gửi xe (Admin) |
 
 ### 3.2 Phân hệ dùng chung
@@ -177,8 +178,17 @@ Quy tắc bổ sung:
 | Công việc bảo trì | `PENDING`, `IN_PROGRESS`, `DONE`, `CANCELLED` | |
 | Yêu cầu gửi xe | `PENDING`, `APPROVED`, `REJECTED` | Từ chối bắt buộc có lý do |
 | Thẻ gửi xe | `ACTIVE`, `LOCKED`, `REPLACED` | Cấp lại tạo thẻ mới, thẻ cũ `REPLACED` |
-| Lịch bảo trì | `PLANNED`, `DONE`, `CANCELLED` | Đến hạn thì sinh công việc bảo trì |
-| Thông báo | `UNREAD`, `READ` | |
+| Lịch bảo trì | `PLANNED`, `DONE`, `CANCELLED` | Đến hạn thì sinh công việc bảo trì; được phép cắt theo §12.2 mục 4 |
+| Thông báo | `is_read` (boolean) | Không có enum; đọc/không đọc lưu ở cột `is_read` |
+
+### 3.4 Giá trị enum dùng chung
+
+| Nhóm | Giá trị | Ghi chú |
+|---|---|---|
+| Trạng thái kỹ thuật viên | `ACTIVE`, `INACTIVE` | Dùng cho `technicians.status`; mặc định `ACTIVE`; `INACTIVE` không nhận việc mới |
+| Tần suất bảo trì | `MONTHLY`, `QUARTERLY`, `HALF_YEARLY`, `YEARLY` | Dùng cho `maintenance_schedules.frequency`; mặc định `MONTHLY`; quy đổi tháng 1/3/6/12 nếu tự sinh việc |
+| Ưu tiên | `LOW`, `MEDIUM`, `HIGH`, `URGENT` | Dùng chung cho `feedbacks.priority` và `maintenance_tasks.priority`; mặc định `MEDIUM` |
+| Loại phản ánh | `ELECTRICITY`, `WATER`, `INTERNET`, `ELEVATOR`, `CLEANING`, `SECURITY`, `PARKING`, `OTHER` | Dùng cho `feedbacks.category`; mặc định `OTHER` |
 
 ---
 
@@ -228,7 +238,8 @@ backend/src/main/java/com/bluemoon/
 ├── controller/        # nhận HTTP, trả ResponseEntity
 ├── dto/               # *Request, *Response, PageResponse
 ├── entity/            # ánh xạ bảng
-├── enums/             # RoleEnum, FeeType, FeeStatus, PaymentStatus, FeedbackStatus, ...
+├── enums/             # RoleEnum, FeeType, FeeStatus, PaymentStatus, FeedbackStatus, Priority,
+│                      # MaintenanceFrequency, TechnicianStatus, FeedbackCategory, ...
 ├── exception/         # GlobalExceptionHandler, BusinessException, ResourceNotFoundException
 ├── repository/        # JpaRepository + truy vấn dẫn xuất
 ├── security/          # JwtTokenProvider, JwtAuthFilter, UserDetailsServiceImpl, SecurityConfig
@@ -410,8 +421,8 @@ erDiagram
 
 - Khóa chính: `INT AUTO_INCREMENT`; khóa ngoại cùng kiểu với bảng được tham chiếu.
 - Tiền: `DECIMAL(12,2)`; diện tích: `DECIMAL(8,2)`; tỷ lệ phần trăm không lưu, tính khi cần.
-- Thời gian: `TIMESTAMP`/`DATETIME`, múi giờ `Asia/Ho_Chi_Minh`; audit `created_at`, `updated_at`
-  do Hibernate gán (`@CreationTimestamp`, `@UpdateTimestamp`).
+- Thời gian: `TIMESTAMP`/`DATETIME`, múi giờ `Asia/Ho_Chi_Minh`; mọi bảng mới có `created_at`, `updated_at`,
+  giá trị do Hibernate gán (`@CreationTimestamp`, `@UpdateTimestamp`).
 - Trạng thái: dùng `ENUM` của MySQL như schema hiện tại, giá trị viết HOA; thêm giá trị mới phải sửa cả script và entity.
 - Xóa: không xóa cứng dữ liệu đã phát sinh; dùng trạng thái hoặc `ON DELETE SET NULL` cho tham chiếu mềm.
   Chỉ xóa cứng hộ/nhân khẩu chưa có thanh toán, phản ánh, phương tiện.
@@ -421,14 +432,14 @@ erDiagram
 
 ### 6.5 Chiến lược migration
 
-- `database/init_database.sql`: script khởi tạo đầy đủ cho máy mới — cập nhật lên **v2** ở GĐ1, gồm 8 bảng cũ +
-  9 bảng mới + dữ liệu mẫu + tài khoản mẫu (mật khẩu đã băm).
+- `database/init_database.sql`: script khởi tạo đầy đủ cho máy mới — cập nhật dần ở GĐ1 (8 bảng cũ + cột xác thực),
+  gộp đủ 8 bảng cũ + 9 bảng mới + dữ liệu mẫu + tài khoản mẫu (mật khẩu đã băm) ở GĐ4.
 - `database/migrations/`: các script thay đổi tăng dần cho máy đã có dữ liệu, đặt tên
   `YYYYMMDD-mo-ta.sql`, mỗi script chạy được một lần, có ghi chú ở đầu.
 - Không dùng `ddl-auto=update`; giữ `none` để CSDL do script kiểm soát.
 - Khi demo: máy mới chạy `init_database.sql`; máy đã có dữ liệu chạy lần lượt các migration.
 - Dữ liệu mẫu phải đủ để demo cả 5 nghiệp vụ: ít nhất 8 hộ, 13 nhân khẩu, 6 khoản thu, 10 giao dịch,
-  3 phản ánh ở 3 trạng thái, 4 thiết bị + 3 công việc, 2 yêu cầu gửi xe, 2 thẻ.
+  3 phản ánh ở 3 trạng thái, 4 thiết bị + 3 lịch bảo trì + 3 công việc, 2 yêu cầu gửi xe, 2 thẻ.
 
 ---
 
@@ -492,24 +503,28 @@ Mã HTTP: `200` đọc/cập nhật, `201` tạo, `204` xóa, `400` dữ liệu 
 |---|---|---|
 | Auth | `POST /api/auth/login`, `POST /api/auth/register`, `GET /api/auth/me`, `PUT /api/auth/password` | Công khai / đã đăng nhập |
 | Người dùng | `GET/POST /api/users`, `PUT /api/users/{id}`, `PATCH /api/users/{id}/status` | ADMIN |
-| Hộ gia đình | `GET /api/households` (q, status, page), `GET/PUT/DELETE /api/households/{id}`, `POST /api/households`, `GET /api/households/{id}/residents` | ADMIN, MANAGER; cư dân xem hộ mình |
-| Nhân khẩu | `GET /api/residents` (householdId, q, status), `POST /api/residents`, `PUT/DELETE /api/residents/{id}`, `GET /api/residents/{id}/changes` | ADMIN, MANAGER |
-| Biến động | `GET/POST /api/residence-changes`, `PUT/DELETE /api/residence-changes/{id}` | ADMIN, MANAGER |
-| Khoản thu | `GET /api/fees` (year, month, status), `POST /api/fees`, `PUT /api/fees/{id}`, `POST /api/fees/{id}/generate`, `POST /api/fees/{id}/close`, `GET /api/fees/{id}/debts` | ADMIN, ACCOUNTANT; MANAGER đọc |
-| Thu phí | `GET /api/payments` (feeId, householdId, status), `GET /api/payments/{id}`, `POST /api/payments/{id}/transactions`, `GET /api/payments/{id}/transactions` | ACCOUNTANT; cư dân xem/tạo của mình |
+| Hộ gia đình | `GET /api/households` (q, status, page), `GET/PUT/DELETE /api/households/{id}`, `POST /api/households`, `GET /api/households/{id}/residents` | ADMIN, MANAGER; ACCOUNTANT đọc; cư dân xem hộ mình |
+| Nhân khẩu | `GET /api/residents` (householdId, q, status), `POST /api/residents`, `PUT/DELETE /api/residents/{id}`, `GET /api/residents/{id}/changes` | ADMIN, MANAGER; ACCOUNTANT đọc |
+| Biến động | `GET/POST /api/residence-changes`, `PUT/DELETE /api/residence-changes/{id}` | ADMIN, MANAGER; ACCOUNTANT đọc |
+| Khoản thu | `GET /api/fees` (year, month, status), `POST /api/fees`, `PUT/DELETE /api/fees/{id}`, `POST /api/fees/{id}/generate`, `POST /api/fees/{id}/close`, `GET /api/fees/{id}/debts` | ADMIN, ACCOUNTANT; MANAGER, cư dân đọc |
+| Thu phí | `GET /api/payments` (feeId, householdId, status), `GET /api/payments/{id}`, `POST /api/payments/{id}/transactions`, `GET /api/payments/{id}/transactions` | ACCOUNTANT; MANAGER đọc; cư dân xem/tạo của mình |
 | Duyệt giao dịch | `PATCH /api/transactions/{id}/approve`, `PATCH /api/transactions/{id}/reject` | ACCOUNTANT |
-| Thu hộ | `GET/POST /api/utility-bills`, `PUT/DELETE /api/utility-bills/{id}`, `PATCH /api/utility-bills/{id}/pay` | ADMIN, ACCOUNTANT |
-| Phản ánh | `GET /api/feedbacks` (status, category, from, to), `GET /api/feedbacks/{id}`, `POST /api/feedbacks`, `PATCH /api/feedbacks/{id}/status`, `POST /api/feedbacks/{id}/respond`, `POST /api/feedbacks/merge` | MANAGER/ADMIN; cư dân tạo và xem của mình |
-| Thiết bị | `GET/POST /api/equipment`, `PUT/DELETE /api/equipment/{id}` | ADMIN, MANAGER |
-| Lịch bảo trì | `GET/POST /api/maintenance-schedules`, `PUT/DELETE /api/maintenance-schedules/{id}` | ADMIN, MANAGER |
-| Công việc bảo trì | `GET /api/maintenance-tasks` (technicianId, status), `POST /api/maintenance-tasks`, `PATCH /api/maintenance-tasks/{id}/assign`, `PATCH /api/maintenance-tasks/{id}/status`, `POST /api/maintenance-tasks/{id}/accept` | MANAGER/ADMIN; kỹ thuật cập nhật việc của mình |
+| Thu hộ | `GET/POST /api/utility-bills`, `PUT/DELETE /api/utility-bills/{id}`, `PATCH /api/utility-bills/{id}/pay` | ADMIN, ACCOUNTANT; MANAGER đọc; cư dân xem của mình |
+| Phản ánh | `GET /api/feedbacks` (status, category, from, to), `GET /api/feedbacks/{id}`, `POST /api/feedbacks`, `PATCH /api/feedbacks/{id}/status`, `POST /api/feedbacks/{id}/respond`, `POST /api/feedbacks/merge` | MANAGER/ADMIN; kỹ thuật xem việc liên quan; cư dân tạo và xem của mình |
+| Thiết bị | `GET/POST /api/equipment`, `PUT/DELETE /api/equipment/{id}` | ADMIN, MANAGER; TECHNICIAN đọc |
+| Lịch bảo trì | `GET/POST /api/maintenance-schedules`, `PUT/DELETE /api/maintenance-schedules/{id}` | ADMIN, MANAGER; TECHNICIAN đọc |
+| Công việc bảo trì | `GET /api/maintenance-tasks` (technicianId, status), `POST /api/maintenance-tasks`, `PATCH /api/maintenance-tasks/{id}/assign`, `PATCH /api/maintenance-tasks/{id}/status`, `POST /api/maintenance-tasks/{id}/accept` | MANAGER/ADMIN; kỹ thuật xem và cập nhật việc của mình |
 | Kỹ thuật viên | `GET/POST /api/technicians`, `PUT /api/technicians/{id}` | ADMIN, MANAGER |
-| Đăng ký gửi xe | `GET /api/vehicle-registrations` (status, householdId), `POST /api/vehicle-registrations`, `PATCH /api/vehicle-registrations/{id}/approve`, `PATCH /api/vehicle-registrations/{id}/reject` | Cư dân tạo; MANAGER/ADMIN duyệt |
-| Phương tiện | `GET/POST /api/vehicles`, `PUT/DELETE /api/vehicles/{id}`, `PATCH /api/vehicles/{id}/status` | ADMIN, MANAGER |
-| Thẻ gửi xe | `GET /api/parking-cards`, `POST /api/parking-cards`, `PATCH /api/parking-cards/{id}/lock`, `PATCH /api/parking-cards/{id}/reissue` | ADMIN, MANAGER; cư dân xem của mình |
+| Đăng ký gửi xe | `GET /api/vehicle-registrations` (status, householdId), `POST /api/vehicle-registrations`, `PATCH /api/vehicle-registrations/{id}/approve`, `PATCH /api/vehicle-registrations/{id}/reject` | Cư dân tạo; MANAGER/ADMIN duyệt; ACCOUNTANT đọc |
+| Phương tiện | `GET/POST /api/vehicles`, `PUT/DELETE /api/vehicles/{id}`, `PATCH /api/vehicles/{id}/status` | ADMIN, MANAGER; ACCOUNTANT đọc |
+| Thẻ gửi xe | `GET /api/parking-cards`, `POST /api/parking-cards`, `PATCH /api/parking-cards/{id}/lock`, `PATCH /api/parking-cards/{id}/reissue` | ADMIN, MANAGER; ACCOUNTANT đọc; cư dân xem của mình |
 | Thông báo | `GET /api/notifications`, `PATCH /api/notifications/{id}/read`, `PATCH /api/notifications/read-all` | Đã đăng nhập (của mình) |
 | Thống kê | `GET /api/stats/overview`, `/revenue`, `/debts`, `/feedbacks`, `/maintenance`, `/residents` | ADMIN, MANAGER, ACCOUNTANT |
 | Health | `GET /api/health` | Công khai |
+
+Cột quyền tóm tắt; ma trận đầy đủ ở §2.2. Quyền sở hữu dữ liệu (hộ của cư dân, việc của kỹ thuật) kiểm trong service.
+
+`DELETE /api/fees/{id}` chỉ dùng khi khoản thu chưa có hóa đơn; khoản thu đã phát sinh thì dùng `POST /api/fees/{id}/close`.
 
 ### 7.5 Mã lỗi nghiệp vụ
 
@@ -528,6 +543,7 @@ Mã HTTP: `200` đọc/cập nhật, `201` tạo, `204` xóa, `400` dữ liệu 
 | `REGISTRATION_NOT_PENDING` | 409 | Duyệt/từ chối yêu cầu không ở trạng thái chờ |
 | `CARD_ALREADY_LOCKED` | 409 | Khóa thẻ đã khóa |
 | `TASK_INVALID_STATE` | 409 | Chuyển trạng thái công việc không hợp lệ |
+| `TECHNICIAN_INACTIVE` | 409 | Giao việc cho kỹ thuật viên đã ngừng hoạt động |
 | `INTERNAL_ERROR` | 500 | Lỗi không mong đợi (không lộ chi tiết ra client) |
 
 ---
@@ -646,7 +662,7 @@ Một việc được coi là xong khi:
 ### 11.3 Công cụ
 
 - Backend: Maven Surefire, `spring-boot-starter-test`.
-- API: Postman (collection commit trong `docs/postman/`).
+- API: Postman (collection commit trong `tests/postman/`).
 - Giao diện: kiểm tra tay theo checklist; chưa thêm test runner frontend trong phạm vi.
 
 ---
@@ -682,7 +698,7 @@ Không cắt: đăng nhập/phân quyền, CRUD 5 nghiệp vụ, duyệt yêu c�
 
 | Giai đoạn | Thời lượng | Mục tiêu | Kết quả kiểm chứng |
 |---|---|---|---|
-| GĐ1 — Nền tảng & khung | 4 ngày | JWT + RBAC, chuẩn API, DB v2, mỗi nghiệp vụ có entity/repo + API `GET` + trang danh sách | Đăng nhập 5 vai trò; 5 nhóm `GET` trả JSON; `mvn test` + `npm run build` pass |
+| GĐ1 — Nền tảng & khung | 4 ngày | JWT + RBAC, chuẩn API, DB nền + migration, mỗi nghiệp vụ có entity/repo + API `GET` + trang danh sách | Đăng nhập 5 vai trò; 5 nhóm `GET` trả JSON; `mvn test` + `npm run build` pass |
 | GĐ2 — CRUD chính | 4 ngày | UC01 + UC02 CRUD end-to-end; mỗi nghiệp vụ có form thêm/sửa/xóa | Tạo hộ/nhân khẩu; sinh hóa đơn; nộp + duyệt thanh toán; công nợ đúng |
 | GĐ3 — Luồng nghiệp vụ & cổng cư dân | 4 ngày | UC03 + UC04 + UC05 hoàn chỉnh; cư dân dùng được; kỹ thuật cập nhật việc | 5 luồng demo được; cư dân không thấy dữ liệu hộ khác |
 | GĐ4 — Chốt & bàn giao | 3 ngày | Kiểm thử, seed, sửa lỗi, tài liệu, demo, tag | Demo 5 luồng; test/build xanh; tài liệu đủ; tag `v1.0` |

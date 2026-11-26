@@ -22,17 +22,45 @@ Quay lại [kế hoạch chia việc](ke-hoach-chia-viec.md) khi cần xem lịc
 
 Mỗi đợt có 1 ngày cuối để dự phòng: 29/11, 03/12, 07/12, 10/12. Task giữ nguyên thứ tự, chỉ dời ngày theo đợt.
 
+## Chốt trước khi làm GĐ1
+
+Bốn bộ giá trị enum dùng từ GĐ1 (sẽ ghi vào spec §3.3 khi sửa spec):
+
+| Enum | Giá trị | Mặc định |
+|---|---|---|
+| `Priority` (cho `feedbacks.priority` và `maintenance_tasks.priority`) | `LOW`, `MEDIUM`, `HIGH`, `URGENT` | `MEDIUM` |
+| `MaintenanceFrequency` (`maintenance_schedules.frequency`) | `MONTHLY`, `QUARTERLY`, `HALF_YEARLY`, `YEARLY` | `MONTHLY` |
+| `TechnicianStatus` (`technicians.status`) | `ACTIVE`, `INACTIVE` | `ACTIVE` |
+| `FeedbackCategory` (`feedbacks.category`) | `ELECTRICITY`, `WATER`, `INTERNET`, `ELEVATOR`, `CLEANING`, `SECURITY`, `PARKING`, `OTHER` | `OTHER` |
+
+Quy ước GĐ1:
+
+- Mọi bảng mới có `created_at`, `updated_at` (spec §6.4); riêng `feedbacks` dùng `created_at` cho chỉ mục `(status, created_at)`.
+- Lâm tạo 4 enum ở G1-L4; Sơn và Đức import lại, không tự khai `String` hay bộ giá trị khác.
+- Kỹ thuật viên `INACTIVE` không nhận việc mới (409 `TECHNICIAN_INACTIVE`); task đang làm giữ nguyên.
+- Ngày 27/11: Lâm merge G1-L2 (CORS, `apiClient`, proxy) trước; G1-A3 (Đức Anh) và G1-K2 (Kiên) chỉ nối trang sau khi có `apiClient`/proxy. Nếu G1-L2 chưa merge, dời hai task sang 28/11 và dùng ngày dự phòng 29/11.
+- Postman dùng `tests/postman/<uc>.json` (khớp spec §11.3).
+- Quản lý tài khoản (`POST/PUT /api/users`, `PATCH /api/users/{id}/status`, màn hình Hệ thống) chưa giao trong GĐ1; đề xuất thêm task ở GĐ2 (tạm gọi G2-L4).
+
+## Chốt đợt (chung)
+
+**Cuối đợt 1 (29/11):** Lâm tạo database sạch, chạy `init_database.sql` và tất cả migration, chạy test backend và build frontend; đăng nhập 5 tài khoản; gọi 5 nhóm API đọc. Nếu lỗi, đợt 2 bắt đầu bằng sửa lỗi.
+
+**Cuối đợt 2 (03/12):** Lâm chạy lại luồng hộ, nhân khẩu, khoản thu, hóa đơn, nộp tiền, duyệt tiền và kiểm tra công nợ.
+
+**Cuối đợt 3 (07/12):** Lâm chạy cả năm luồng và kiểm tra quyền: cư dân chỉ thấy dữ liệu của mình, kỹ thuật chỉ thấy việc của mình.
+
 ## Lâm — nền móng + tài liệu
 
-File của bạn: `pom.xml`, `application.properties`, `security/`, `exception/`, `config/`, `enums/`, `dto/auth/`, `AuthService`, `AuthController`, `UserEntity`, `UserRepository`, `Notification*`, `HealthController`; `app/`, `lib/`, `components/ui.jsx`, `styles.css`, `App.jsx`, `main.jsx`, `vite.config.js`, `pages/Login.jsx`, `pages/Dashboard.jsx`, `pages/Statistics.jsx`, `pages/Account.jsx`, `features/_template/`, `features/notifications/`, `features/reports/`; `database/init_database.sql`, `migrations/*-uc00-auth.sql`, `migrations/*-notifications.sql`; `docs/`.
+File của bạn: `pom.xml`, `application.properties`, `security/`, `exception/`, `config/`, `enums/`, `dto/auth/`, `dto/ErrorResponse.java`, `dto/PageResponse.java`, `AuthService`, `AuthController`, `UserEntity`, `UserRepository`, `Notification*`, `HealthController`; `app/`, `lib/`, `components/ui.jsx`, `styles.css`, `App.jsx`, `main.jsx`, `vite.config.js`, `pages/Login.jsx`, `pages/Register.jsx`, `pages/Dashboard.jsx`, `pages/Statistics.jsx`, `pages/Account.jsx`, `features/_template/`, `features/notifications/`, `features/reports/`; `database/init_database.sql`, `migrations/*-uc00-auth.sql`, `migrations/*-notifications.sql`; `docs/`.
 
 Không sửa file ngoài danh sách này.
 
 ### Đợt 1 · 26–29/11
 
-**File làm việc:** `pom.xml`, `application.properties`, `security/`, `AuthController`, `AuthService`, `UserEntity`, `UserRepository`, `dto/auth/`, `exception/`, `config/CorsConfig`, `lib/auth.js`, `lib/apiClient.js`, `pages/Login.jsx`, `App.jsx`, `vite.config.js`, `app/`, `features/_template/`, `lib/resources.js`, `components/ui.jsx`, `lib/format.js`, `migrations/20261127-uc00-auth.sql`, `database/init_database.sql`, `docs/api-conventions.md`.
+**File làm việc:** `pom.xml`, `application.properties`, `security/`, `AuthController`, `AuthService`, `UserEntity`, `UserRepository`, `dto/auth/`, `dto/ErrorResponse.java`, `dto/PageResponse.java`, `enums/Priority.java`, `enums/MaintenanceFrequency.java`, `enums/TechnicianStatus.java`, `enums/FeedbackCategory.java`, `exception/`, `config/CorsConfig`, `lib/auth.js`, `lib/apiClient.js`, `pages/Login.jsx`, `pages/Register.jsx`, `App.jsx`, `vite.config.js`, `app/`, `features/_template/`, `lib/resources.js`, `components/ui.jsx`, `lib/format.js`, `migrations/20261127-uc00-auth.sql`, `database/init_database.sql`, `docs/api-conventions.md`.
 
-**Kết quả đầu ra:** `security/JwtTokenProvider.java`, `JwtAuthFilter.java`, `UserDetailsServiceImpl.java`, `SecurityConfig.java`, `AuthController.java`, `AuthService.java`, `dto/auth/*`, `exception/*`, `dto/ErrorResponse.java`, `config/CorsConfig.java`, `app/AdminLayout.jsx`, `app/ResidentLayout.jsx`, `features/_template/*`, `App.jsx`, `lib/auth.js`, `lib/apiClient.js`, `lib/resources.js`, `components/ui.jsx`, `lib/format.js`, `pages/Login.jsx`, `migrations/20261127-uc00-auth.sql`, `database/init_database.sql`, `docs/api-conventions.md`.
+**Kết quả đầu ra:** `security/JwtTokenProvider.java`, `JwtAuthFilter.java`, `UserDetailsServiceImpl.java`, `SecurityConfig.java`, `AuthController.java`, `AuthService.java`, `dto/auth/*`, `dto/ErrorResponse.java`, `dto/PageResponse.java`, `enums/Priority.java`, `enums/MaintenanceFrequency.java`, `enums/TechnicianStatus.java`, `enums/FeedbackCategory.java`, `exception/*`, `config/CorsConfig.java`, `app/AdminLayout.jsx`, `app/ResidentLayout.jsx`, `features/_template/*`, `App.jsx`, `lib/auth.js`, `lib/apiClient.js`, `lib/resources.js`, `components/ui.jsx`, `lib/format.js`, `pages/Login.jsx`, `pages/Register.jsx`, `migrations/20261127-uc00-auth.sql`, `database/init_database.sql`, `docs/api-conventions.md`.
 
 **G1-L1 · 26/11 (ngày 1) — Làm đăng nhập.**
 
@@ -44,13 +72,23 @@ File: `pom.xml`, `security/`, `AuthController`, `AuthService`, `UserEntity`, `mi
 
 Xong khi: dùng Postman gọi `POST /api/auth/login` bằng tài khoản `admin`/`123456` nhận được token; sai mật khẩu trả lỗi 401.
 
+**G1-L4 · 26/11 (làm kèm G1-L1) — Tạo enum dùng chung cho UC03/UC04.**
+
+Việc: tạo 4 enum trong `enums/` đúng bộ giá trị ở mục "Chốt trước khi làm GĐ1" để Sơn và Đức dùng lại.
+
+Cụ thể: `Priority` (`LOW`, `MEDIUM`, `HIGH`, `URGENT`, mặc định `MEDIUM`); `MaintenanceFrequency` (`MONTHLY`, `QUARTERLY`, `HALF_YEARLY`, `YEARLY`, mặc định `MONTHLY`); `TechnicianStatus` (`ACTIVE`, `INACTIVE`, mặc định `ACTIVE`); `FeedbackCategory` (`ELECTRICITY`, `WATER`, `INTERNET`, `ELEVATOR`, `CLEANING`, `SECURITY`, `PARKING`, `OTHER`, mặc định `OTHER`). Entity dùng `@Enumerated(EnumType.STRING)`.
+
+File: `enums/Priority.java`, `enums/MaintenanceFrequency.java`, `enums/TechnicianStatus.java`, `enums/FeedbackCategory.java`.
+
+Xong khi: Sơn/Đức import được enum; app khởi động; build pass.
+
 **G1-L2 · 27/11 (ngày 2) — Chuẩn lỗi và làm trang đăng nhập.**
 
 Việc: viết chỗ trả lỗi chung (400, 401, 403, 404, 409); bật CORS (cho phép giao diện gọi backend); làm trang đăng nhập gọi API thật; lưu token; chặn trang khi chưa đăng nhập; thêm cấu hình để giao diện gọi được backend khi chạy riêng.
 
-Cụ thể: Lỗi trả `{status, code, message, fieldErrors}`; CORS cho `http://localhost:5173`. Form đăng nhập 2 ô, lỗi hiện dưới nút; token lưu để gắn vào mọi request.
+Cụ thể: Lỗi trả `{timestamp, status, code, message, path, fieldErrors}`; CORS cho `http://localhost:5173`; thêm `PageResponse<T>` cho danh sách phân trang (spec §4.2). Form đăng nhập 2 ô, lỗi hiện dưới nút; token lưu để gắn vào mọi request.
 
-File: `exception/`, `dto/ErrorResponse`, `config/CorsConfig`, `lib/auth.js`, `lib/apiClient.js`, `pages/Login.jsx`, `App.jsx`, `vite.config.js`.
+File: `exception/`, `dto/ErrorResponse`, `dto/PageResponse`, `config/CorsConfig`, `lib/auth.js`, `lib/apiClient.js`, `pages/Login.jsx`, `App.jsx`, `vite.config.js`.
 
 Xong khi: mở `http://localhost:5173`, đăng nhập bằng 5 tài khoản; sai mật khẩu hiện thông báo; chưa đăng nhập thì bị đưa về trang login.
 
@@ -58,11 +96,21 @@ Xong khi: mở `http://localhost:5173`, đăng nhập bằng 5 tài khoản; sai
 
 Việc: làm khung trang cho nhân viên và cho cư dân; làm trang mẫu; thêm toàn bộ route cho 5 nghiệp vụ và entry `resources` cho tất cả endpoint (GET/CRUD/action) theo spec §7.4; thêm nhãn trạng thái; viết `docs/api-conventions.md`.
 
-Cụ thể: Menu nhân viên: Tổng quan, Cư dân, Thu phí, Phản ánh, Bảo trì, Gửi xe, Hệ thống. Menu cư dân: Hóa đơn, Phản ánh, Gửi xe, Thông báo. Trang mẫu có bảng, nút Thêm, modal 2 ô, ô tìm kiếm. Route đủ 5 UC; resources đủ endpoint, gồm notifications/stats; `StatusBadge` có nhãn mới.
+Cụ thể: Menu nhân viên: Tổng quan, Cư dân, Thu phí, Phản ánh, Bảo trì, Gửi xe, Hệ thống. Menu cư dân: Hóa đơn, Phản ánh, Gửi xe, Thông báo. Trang mẫu có bảng, nút Thêm, modal 2 ô, ô tìm kiếm. Route đủ 5 UC; resources đủ endpoint, gồm notifications/stats; `StatusBadge` có nhãn mới; `lib/format.js` thêm `PRIORITY`, `FREQUENCY`, `CATEGORY` để Sơn/Đức dùng chung.
 
 File: `app/`, `features/_template/`, `App.jsx`, `lib/resources.js`, `components/ui.jsx`, `lib/format.js`.
 
 Xong khi: nhân viên vào giao diện nhân viên, cư dân vào giao diện cư dân; trang mẫu chạy; build không lỗi.
+
+**G1-L5 · 28/11 (ngày 3, làm tiếp) — Đăng ký cư dân.**
+
+Việc: làm API đăng ký tài khoản cư dân và trang đăng ký; tài khoản mới có vai trò `RESIDENT`, `resident_id` để trống (ADMIN gán khi có màn hình quản lý tài khoản ở GĐ2).
+
+Cụ thể: `POST /api/auth/register` nhận `username, password, fullName, phone` (email tùy chọn), trả `201` + `user`, không trả token; không nhận `role` từ client, luôn tạo `RESIDENT`; trùng `username` 409 `DUPLICATE_CODE`, mật khẩu ≥ 6 ký tự. Trang `pages/Register.jsx`: 4 ô, lỗi hiện dưới nút, link về đăng nhập; route công khai `/register`.
+
+File: `AuthController`, `AuthService`, `dto/auth/RegisterRequest` (hoặc dùng lại `dto/RegisterRequest` đang có), `pages/Register.jsx`, `App.jsx`, `lib/resources.js`.
+
+Xong khi: đăng ký xong đăng nhập được; trùng username trả 409; chưa đăng nhập vẫn mở được `/register`.
 
 ### Đợt 2 · 30/11–03/12
 
@@ -160,13 +208,13 @@ Xong khi: tài liệu đủ; demo trơn.
 
 ## Đức Anh — UC02 thu phí, công nợ
 
-File của bạn: `Fee*`, `Payment*`, `PaymentTransaction*`, `UtilityBill*`; `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/`; `migrations/*-uc02-*.sql`, `database/seed/uc02.sql`; `tests/postman/uc02.json`.
+File của bạn: `Fee*`, `Payment*`, `PaymentTransaction*`, `UtilityBill*`; `dto/fee/`, `dto/payment/`, `dto/utility/`; `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/`; `migrations/*-uc02-*.sql`, `database/seed/uc02.sql`; `tests/postman/uc02.json`.
 
 Không sửa file ngoài danh sách này.
 
 ### Đợt 1 · 26–29/11
 
-**File làm việc:** `migrations/20261127-uc02-payment-transactions.sql`, `PaymentTransaction*`, `Fee*`, `Payment*`, `UtilityBill*`, `dto/fee/`, `dto/payment/`, `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/api.js`, `tests/postman/uc02.json`.
+**File làm việc:** `migrations/20261127-uc02-payment-transactions.sql`, `PaymentTransaction*`, `Fee*`, `Payment*`, `UtilityBill*`, `dto/fee/`, `dto/payment/`, `dto/utility/`, `pages/Fees.jsx`, `pages/Payments.jsx`, `pages/Bills.jsx`, `features/fees/api.js`, `tests/postman/uc02.json`.
 
 **Kết quả đầu ra:** `payment_transactions` table; `PaymentTransactionEntity/Repository`; `FeeController`, `PaymentController`, `UtilityBillController` (GET); `dto/fee/*`, `dto/payment/*`, `dto/utility/*`; 3 trang; `tests/postman/uc02.json`.
 
@@ -330,7 +378,7 @@ Xong khi: code chạy được; bạn giải thích được một hộ có nhi�
 
 Việc: viết API đọc danh sách, xem chi tiết, lọc; nối 3 trang vào API.
 
-Cụ thể: `GET /api/households?q&status`; `/residents?householdId&q&residenceStatus`; `/residence-changes?householdId&changeType`. Trang Hộ: Mã, Căn hộ, Tầng, Diện tích, Chủ hộ, Số nhân khẩu, Trạng thái. Trang Nhân khẩu: Họ tên, CCCD, Quan hệ, Ngày sinh, Trạng thái. Trang Biến động: Nhân khẩu, Hộ, Loại, Từ ngày, Đến ngày.
+Cụ thể: `GET /api/households?q&status`; `/residents?householdId&q&status`; `/residence-changes?householdId&changeType`. Trang Hộ: Mã, Căn hộ, Tầng, Diện tích, Chủ hộ, Số nhân khẩu, Trạng thái. Trang Nhân khẩu: Họ tên, CCCD, Quan hệ, Ngày sinh, Trạng thái. Trang Biến động: Nhân khẩu, Hộ, Loại, Từ ngày, Đến ngày.
 
 File: `Household*`, `Resident*`, `ResidenceChange*`, `pages/Households.jsx`, `pages/Residents.jsx`, `pages/Changes.jsx`, `features/households/api.js`.
 
@@ -456,7 +504,7 @@ Không sửa file ngoài danh sách này.
 
 Việc: viết migration cho bảng `feedbacks`; viết class và repository.
 
-Cụ thể: Bảng `feedbacks`: `household_id, resident_id, category, priority, content, status, response, responded_by, responded_at, merged_into_id, attachment_url`; chỉ mục `(status, created_at)`.
+Cụ thể: Bảng `feedbacks`: `household_id, resident_id, category, priority, content, status, response, responded_by, responded_at, merged_into_id, attachment_url, created_at`; chỉ mục `(status, created_at)`. `category` dùng `FeedbackCategory`, `priority` dùng `Priority` (G1-L4).
 
 File: `migrations/20261127-uc03-feedbacks.sql`, `Feedback*`.
 
@@ -486,7 +534,7 @@ Xong khi: xem chi tiết được; Postman chạy; build không lỗi.
 
 Việc: viết migration cho `vehicle_registrations`, `parking_cards`; viết class và repository.
 
-Cụ thể: Bảng `vehicle_registrations`: `household_id, vehicle_id, license_plate, vehicle_type, brand, owner_name, status, reject_reason, requested_by, processed_by, processed_at`. Bảng `parking_cards`: `vehicle_id, card_code, status, issued_date, locked_reason, replaced_by_id`.
+Cụ thể: Bảng `vehicle_registrations`: `household_id, vehicle_id, license_plate, vehicle_type, brand, owner_name, status, reject_reason, requested_by, processed_by, processed_at`. Bảng `parking_cards`: `vehicle_id, card_code, status, issued_date, locked_reason, replaced_by_id, note`.
 
 File: `migrations/20261127-uc05-vehicle-registrations.sql`, `VehicleRegistration*`, `ParkingCard*`.
 
@@ -602,7 +650,7 @@ Không sửa file ngoài danh sách này.
 
 Việc: viết migration cho `equipment`, `maintenance_schedules`, `maintenance_tasks`, `technicians`; viết class và repository.
 
-Cụ thể: Bảng `equipment`: `name, location, status, installed_at, note`; `maintenance_schedules`: `equipment_id, planned_date, frequency, status`; `maintenance_tasks`: `equipment_id, schedule_id, technician_id, title, description, priority, start_date, end_date, status, result, accepted_by, accepted_at`; `technicians`: `full_name, specialty, phone, status, user_id`.
+Cụ thể: Bảng `equipment`: `name, location, status, installed_at, note`; `maintenance_schedules`: `equipment_id, planned_date, frequency, note, status`; `maintenance_tasks`: `equipment_id, schedule_id, technician_id, title, description, priority, start_date, end_date, status, result, accepted_by, accepted_at`; `technicians`: `full_name, specialty, phone, status, user_id`. Dùng `MaintenanceFrequency` cho `frequency`, `Priority` cho `priority`, `TechnicianStatus` cho `status` (G1-L4); mọi bảng thêm `created_at`, `updated_at`.
 
 File: `migrations/20261127-uc04-maintenance.sql`, `Equipment*`, `MaintenanceSchedule*`, `MaintenanceTask*`, `Technician*`.
 
@@ -610,11 +658,11 @@ Xong khi: chạy migration; app nhận đúng 4 bảng.
 
 **G1-S2 · 27/11 (ngày 2) — Làm API đọc và trang thiết bị.**
 
-Việc: viết API đọc danh sách, xem chi tiết cho thiết bị, lịch, công việc; làm trang danh sách thiết bị.
+Việc: viết API đọc danh sách cho thiết bị, lịch, công việc theo spec §7.4 (chưa có endpoint chi tiết); làm trang danh sách thiết bị.
 
 Cụ thể: `GET /api/equipment?status&q`; `/maintenance-schedules?equipmentId&from&to`; `/maintenance-tasks?technicianId&status`. Trang Thiết bị: Mã, Tên, Vị trí, Trạng thái, Ngày lắp.
 
-File: `features/maintenance/api.js`, `features/maintenance/pages/EquipmentList.jsx`.
+File: `EquipmentController/Service/Repository`, `MaintenanceScheduleController/Service/Repository`, `MaintenanceTaskController/Service/Repository`, `features/maintenance/api.js`, `features/maintenance/pages/EquipmentList.jsx`.
 
 Xong khi: mở trang thấy dữ liệu thật.
 
@@ -622,13 +670,11 @@ Xong khi: mở trang thấy dữ liệu thật.
 
 Việc: làm khung trang lịch bảo trì và trang công việc; viết Postman.
 
-Cụ thể: Trang Lịch: Thiết bị, Ngày, Tần suất, Trạng thái. Trang Công việc: Thiết bị, Tiêu đề, Kỹ thuật, Bắt đầu, Trạng thái.
+Cụ thể: Trang Lịch: Thiết bị, Ngày, Tần suất (nhãn `FREQUENCY`), Trạng thái. Trang Công việc: Thiết bị, Tiêu đề, Kỹ thuật, Bắt đầu, Trạng thái.
 
 File: `features/maintenance/pages/ScheduleList.jsx`, `features/maintenance/pages/TaskList.jsx`, `tests/postman/uc04.json`.
 
 Xong khi: 3 trang chạy; build không lỗi.
-
-Cuối đợt 1, Lâm tạo database sạch, chạy `init_database.sql` và tất cả migration, chạy test backend và build frontend; đăng nhập 5 tài khoản; gọi 5 nhóm API đọc. Nếu lỗi, đợt 2 bắt đầu bằng sửa lỗi.
 
 ### Đợt 2 · 30/11–03/12
 
@@ -666,8 +712,6 @@ File: `features/maintenance/pages/EquipmentList.jsx`, `features/maintenance/page
 
 Xong khi: làm được trên màn hình.
 
-Cuối đợt 2, Lâm chạy lại luồng hộ, nhân khẩu, khoản thu, hóa đơn, nộp tiền, duyệt tiền và kiểm tra công nợ.
-
 ### Đợt 3 · 04–07/12
 
 **File làm việc:** `features/maintenance/pages/MyTasks.jsx`, `features/maintenance/pages/MaintenanceHistory.jsx`, `MaintenanceTaskService/Controller`, `tests/postman/uc04.json`.
@@ -703,8 +747,6 @@ Cụ thể: Chạy lại UC04; Postman `uc04.json`; sửa lỗi.
 File: `tests/postman/uc04.json`.
 
 Xong khi: phần bảo trì chạy ổn.
-
-Cuối đợt 3, Lâm chạy cả năm luồng và kiểm tra quyền: cư dân chỉ thấy dữ liệu của mình, kỹ thuật chỉ thấy việc của mình.
 
 ### Đợt 4 · 08–10/12
 
