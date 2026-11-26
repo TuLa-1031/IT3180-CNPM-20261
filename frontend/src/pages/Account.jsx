@@ -13,9 +13,9 @@ export default function Account() {
     e.preventDefault()
     updateProfile(profile)
   }
-  const savePassword = (e) => {
+  const savePassword = async (e) => {
     e.preventDefault()
-    if (changePassword(password)) setPassword({ old: '', next: '', confirm: '' })
+    if (await changePassword(password)) setPassword({ old: '', next: '', confirm: '' })
   }
 
   return (

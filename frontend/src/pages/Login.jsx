@@ -1,24 +1,35 @@
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from '../App'
+import { getToken, isTokenExpired, roleHome } from '../lib/auth'
 import { Icon, MoonMark } from '../components/Icons'
-import { Modal } from '../components/Modal'
-import { Field, FormGrid } from '../components/ui'
 
 export default function Login() {
-  const { user, login, register } = useApp()
+  const { user, login } = useApp()
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [showRegister, setShowRegister] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
-  if (user) return <Navigate to="/" replace />
+  if (user && getToken() && !isTokenExpired()) return <Navigate to={roleHome(user.role)} replace />
 
-  const submit = (e) => {
-    e.preventDefault()
-    if (!login(username, password)) setError('Tên đăng nhập hoặc mật khẩu không đúng.')
-    else navigate('/')
+  const submit = async (event) => {
+    event.preventDefault()
+    setError('')
+    if (!username.trim() || !password) {
+      setError('Nhập tên đăng nhập và mật khẩu.')
+      return
+    }
+    setSubmitting(true)
+    try {
+      const account = await login(username.trim(), password)
+      navigate(roleHome(account.role), { replace: true })
+    } catch (err) {
+      setError(err.message || 'Đăng nhập không thành công.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -49,39 +60,24 @@ export default function Login() {
             <div className="field">
               <label htmlFor="lg-user">Tên đăng nhập</label>
               <input id="lg-user" name="username" autoComplete="username" value={username}
-                onChange={(e) => setUsername(e.target.value)} placeholder="Nhập tên đăng nhập" required />
+                onChange={(event) => setUsername(event.target.value)} placeholder="Nhập tên đăng nhập" required />
             </div>
             <div className="field">
               <label htmlFor="lg-pass">Mật khẩu</label>
               <input id="lg-pass" name="password" type="password" autoComplete="current-password" value={password}
-                onChange={(e) => setPassword(e.target.value)} placeholder="Nhập mật khẩu" required />
+                onChange={(event) => setPassword(event.target.value)} placeholder="Nhập mật khẩu" required />
             </div>
-            <button type="submit" className="btn btn-primary btn-block"><Icon name="logout" size={16} />Đăng nhập</button>
+            <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
+              <Icon name="logout" size={16} />{submitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
+            </button>
           </form>
-          {error && <div className="login-error">{error}</div>}
-          <button type="button" className="btn btn-quiet btn-block" style={{ marginTop: 10 }} onClick={() => setShowRegister(true)}>
-            Chưa có tài khoản? Đăng ký
-          </button>
+          {error && <div className="login-error" role="alert">{error}</div>}
           <div className="login-hint">
-            <strong>Tài khoản dùng thử:</strong> admin / 123456 hoặc ketoan / 123456.<br />
-            Dữ liệu được lấy từ máy chủ backend nếu có, ngược lại dùng dữ liệu mẫu.
+            <strong>Tài khoản dùng thử (mật khẩu 123456):</strong><br />
+            admin · quanly · ketoan · kythuat · cudan
           </div>
         </div>
       </section>
-
-      {showRegister && (
-        <Modal title="Đăng ký tài khoản" wide confirmText="Tạo tài khoản"
-          onClose={() => setShowRegister(false)} onConfirm={(data) => register(data)}>
-          <FormGrid>
-            <Field label="Tên đăng nhập" name="username" required />
-            <Field label="Họ và tên" name="fullName" required />
-            <Field label="Mật khẩu" name="password" type="password" required />
-            <Field label="Xác nhận mật khẩu" name="confirm" type="password" required />
-            <Field label="Email" name="email" type="email" />
-            <Field label="Điện thoại" name="phone" />
-          </FormGrid>
-        </Modal>
-      )}
     </div>
   )
 }
