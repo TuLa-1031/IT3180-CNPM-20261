@@ -18,7 +18,10 @@ export default function TemplatePage({
   title = 'Trang mẫu',
   sub = 'Khung màn hình chuẩn cho một phân hệ: bảng, tìm kiếm, thêm mới bằng modal.',
   initialRows = SAMPLE_ROWS,
-  addLabel = 'Thêm bản ghi'
+  addLabel = 'Thêm bản ghi',
+  readOnly = false,
+  emptyTitle = 'Chưa có bản ghi',
+  emptyHint = 'Bấm nút Thêm để tạo bản ghi đầu tiên.'
 }) {
   const { notify } = useApp()
   const [rows, setRows] = useState(() => initialRows)
@@ -59,9 +62,11 @@ export default function TemplatePage({
   return (
     <>
       <PageHead title={title} sub={sub}>
-        <button className="btn btn-primary" onClick={() => setOpen(true)}>
-          <Icon name="plus" size={16} />{addLabel}
-        </button>
+        {!readOnly && (
+          <button className="btn btn-primary" onClick={() => setOpen(true)}>
+            <Icon name="plus" size={16} />{addLabel}
+          </button>
+        )}
       </PageHead>
 
       <section className="card">
@@ -69,23 +74,25 @@ export default function TemplatePage({
         <div className="table-wrap">
           <table className="data">
             <thead>
-              <tr><th>Tên</th><th>Ghi chú</th><th className="num">Thao tác</th></tr>
+              <tr><th>Tên</th><th>Ghi chú</th>{!readOnly && <th className="num">Thao tác</th>}</tr>
             </thead>
             <tbody>
               {filtered.length ? filtered.map((row) => (
                 <tr key={row.id}>
                   <td className="cell-main">{row.name}</td>
                   <td>{row.note || '—'}</td>
-                  <td>
-                    <div className="row-actions">
-                      <button className="mini-btn" onClick={() => remove(row)}>Xóa</button>
-                    </div>
-                  </td>
+                  {!readOnly && (
+                    <td>
+                      <div className="row-actions">
+                        <button className="mini-btn" onClick={() => remove(row)}>Xóa</button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={3}>
-                    <Empty title="Chưa có bản ghi" hint="Bấm nút Thêm để tạo bản ghi đầu tiên." />
+                  <td colSpan={readOnly ? 2 : 3}>
+                    <Empty title={emptyTitle} hint={emptyHint} />
                   </td>
                 </tr>
               )}
@@ -95,7 +102,7 @@ export default function TemplatePage({
         <TableFoot shown={filtered.length} total={rows.length} />
       </section>
 
-      {open && (
+      {!readOnly && open && (
         <Modal title={addLabel} confirmText="Thêm" onClose={() => setOpen(false)} onConfirm={add}>
           <FormGrid>
             <Field label="Tên" name="name" placeholder="Nhập tên bản ghi" required />

@@ -192,7 +192,16 @@ function HomeRedirect() {
 }
 
 function Placeholder({ title, sub }) {
-  return <TemplatePage title={title} sub={sub} initialRows={[]} addLabel="Thêm mới" />
+  return (
+    <TemplatePage
+      title={title}
+      sub={sub}
+      initialRows={[]}
+      readOnly
+      emptyTitle="Màn hình đang được hoàn thiện"
+      emptyHint="Phân hệ này sẽ được nối API ở giai đoạn sau."
+    />
+  )
 }
 
 function AppRoutes() {
