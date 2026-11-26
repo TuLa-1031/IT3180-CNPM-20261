@@ -4,13 +4,14 @@ File này áp dụng cho **mọi người làm việc trong repo này**: 5 thàn
 cụ AI được dùng để viết code. Nó không yêu cầu cài thêm gì — từng bước dưới đây làm được bằng
 Git, GitHub và terminal.
 
-Ba tài liệu, ba vai trò:
+Các tài liệu, vai trò:
 
 | Tài liệu | Vai trò |
 |---|---|
 | `docs/kien-truc-he-thong.md` | **Spec** — sản phẩm làm ra cái gì (dữ liệu, API, quyền, quy ước) |
 | `docs/ke-hoach-chia-viec.md` | **Kế hoạch** — lịch, ai làm gì, hạn, luật ngắn |
 | `docs/chi-tiet-cong-viec.md` | **Chi tiết** — task ID, việc, file, xong khi |
+| `docs/quy-uoc-code.md` | **Quy ước** — kiến trúc, naming, backend, frontend, database, test |
 | `AGENTS.md` (file này) | **Cách làm** — trình tự, ranh giới, cách phối hợp |
 
 Khi hai tài liệu lệch nhau: spec quyết định sản phẩm, phân công quyết định ai làm gì, file này
@@ -23,9 +24,11 @@ quyết định cách làm. Chỉ đạo trực tiếp của nhóm trưởng th�
 | Đọc | Nội dung | Khi nào |
 |---|---|---|
 | `README.md`, `frontend/README.md` | Cài đặt, cổng, cách chạy, cách lớp gọi API được nối | Ngay lần đầu |
+| `docs/README.md` | Mục lục tài liệu, đọc gì trước | Khi cần tìm tài liệu |
 | `docs/kien-truc-he-thong.md` | Phạm vi, 5 nghiệp vụ, vai trò, mô hình dữ liệu, API, §7.5 mã lỗi | Trước mọi task |
 | `docs/ke-hoach-chia-viec.md` | Lịch, ai làm gì, hạn, luật ngắn | Trước mọi task |
 | `docs/chi-tiet-cong-viec.md` | Task ID, việc, file, cụ thể, xong khi | Trước khi làm |
+| `docs/quy-uoc-code.md` | Kiến trúc, naming, backend, API, frontend, DB, test, Git | Trước khi viết code |
 | Code hiện tại của phần bạn sửa | Cách phần đó đang chạy, ai đang dùng nó | Trước khi sửa |
 
 Vài sự thật về repo để khỏi mất thời gian phát hiện lại:
@@ -111,7 +114,7 @@ Làm đúng thứ tự này cho mọi task, kể cả task nhỏ. Bỏ bước l
 
 ### Bước 2 — Đọc
 
-Đọc spec đúng phần của mình, rồi đọc code mình sẽ sửa:
+Đọc spec đúng phần của mình, đọc `docs/quy-uoc-code.md` cho phần mình sửa, rồi đọc code:
 
 | Người | Spec | Code nên đọc |
 |---|---|---|
@@ -244,6 +247,8 @@ NGOÀI PHẠM VI — <file>:<dòng> — <mô tả một dòng> — không sửa 
 ---
 
 ## 6. Quy ước code
+
+Chi tiết đầy đủ ở [`docs/quy-uoc-code.md`](docs/quy-uoc-code.md); dưới đây là tóm tắt.
 
 **Chung:** code và tên biến bằng tiếng Anh; chữ hiển thị, thông báo lỗi, toast bằng tiếng Việt.
 Không commit `.env`, `node_modules/`, `target/`, dữ liệu cá nhân thật.

@@ -2,12 +2,12 @@
 
 | Thuộc tính | Giá trị |
 |---|---|
-| **Phiên bản** | 1.1 |
+| **Phiên bản** | 1.2 |
 | **Ngày** | 26/11/2026 |
 | **Người viết** | Lê Tùng Lâm (nhóm trưởng) |
 | **Trạng thái** | Đang dùng |
 | **Phạm vi** | Backend, frontend, cơ sở dữ liệu, triển khai |
-| **Tài liệu liên quan** | `README.md`, `frontend/README.md`, `docs/ke-hoach-chia-viec.md`, `docs/chi-tiet-cong-viec.md` |
+| **Tài liệu liên quan** | `README.md`, `frontend/README.md`, `docs/README.md`, `docs/ke-hoach-chia-viec.md`, `docs/chi-tiet-cong-viec.md`, `docs/quy-uoc-code.md` |
 
 ---
 
@@ -586,18 +586,20 @@ Mã HTTP: `200` đọc/cập nhật, `201` tạo, `204` xóa, `400` dữ liệu 
 
 ## 10. Quy ước mã nguồn và quy trình
 
+Chi tiết đầy đủ ở [`docs/quy-uoc-code.md`](quy-uoc-code.md); mục này tóm tắt.
+
 ### 10.1 Đặt tên
 
 - Code (Java, JS, SQL): tiếng Anh; giao diện và thông báo lỗi: tiếng Việt.
 - Java: `PascalCase` cho class, `camelCase` cho biến/phương thức, hằng số `UPPER_SNAKE_CASE`.
 - Bảng/cột: `snake_case`; API: `camelCase` trong JSON.
-- Nhánh Git: `feat/<ma-viec>-<mo-ta>`, `fix/...`, `docs/...`; ví dụ `feat/gd2-fee-generate`.
-- Commit: `<loại>(<phạm vi>): <mô tả>` — `feat(fees): sinh hóa đơn hàng loạt`.
+- Nhánh Git: `feat/g<đợt>-<tên>-<uc>`, `fix/...`, `docs/...`; ví dụ `feat/g2-kien-uc01`.
+- Commit: `<loại>(<uc>): <mô tả>` — `feat(uc02): sinh hóa đơn hàng loạt`.
 
 ### 10.2 Quy trình Git
 
-- `main` luôn chạy được; mỗi việc một nhánh từ `main`, merge bằng pull request.
-- PR nhỏ (≤ 400 dòng thay đổi), có mô tả, ảnh chụp màn hình nếu là UI, và ít nhất 1 người review.
+- `main` luôn chạy được; mỗi đợt một nhánh/người, Đức tách hai nhánh cho UC03/UC05; task lớn tách nhánh.
+- PR nhỏ (≤ 400 dòng thay đổi), có mô tả, ảnh chụp màn hình nếu là UI; Lâm review và merge.
 - Không commit `.env`, `node_modules`, `target`, dữ liệu cá nhân thật.
 - Trước khi merge: build backend + frontend, chạy test, kiểm tra endpoint bằng Postman.
 
@@ -712,3 +714,5 @@ Lịch, phân công và hạn nằm trong `docs/ke-hoach-chia-viec.md`; chi ti�
 - Hướng dẫn cài đặt: `README.md`, `frontend/README.md`.
 - Kế hoạch chia việc: `docs/ke-hoach-chia-viec.md` (lịch, phân công, hạn).
 - Chi tiết công việc: `docs/chi-tiet-cong-viec.md` (task ID, việc, file, xong khi).
+- Quy ước code: `docs/quy-uoc-code.md` (kiến trúc, backend, API, frontend, DB, test, Git).
+- Mục lục tài liệu: `docs/README.md`.

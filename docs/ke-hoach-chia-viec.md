@@ -50,7 +50,9 @@ Các ngày sau, mỗi người xem nhóm việc theo ngày ở file chi tiết.
 ## 5. Đọc ở đâu
 
 - **Việc của bạn, từng ngày:** [`docs/chi-tiet-cong-viec.md`](chi-tiet-cong-viec.md) — mở đúng tên mình. Mỗi đợt có **File làm việc**, **Kết quả đầu ra**, rồi từng task với mã, việc, file, cụ thể, xong khi.
+- **Mục lục tài liệu:** `docs/README.md` — tìm đúng file cần đọc.
 - **Sản phẩm làm ra cái gì:** `docs/kien-truc-he-thong.md` — phạm vi, dữ liệu, API, quyền.
+- **Cách viết code:** `docs/quy-uoc-code.md` — backend, frontend, database, test, Git.
 - **Cách làm, SCOPE, dùng AI:** `AGENTS.md`.
 
 ## 6. Chạy thử

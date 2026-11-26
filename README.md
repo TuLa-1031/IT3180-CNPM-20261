@@ -8,10 +8,24 @@ Dự án môn Nhập môn Công nghệ Phần mềm (IT3180) hỗ trợ Ban qu�
 IT3180_blue_moon/
 ├── backend/       # Mã nguồn Web Java (Maven + Spring Boot + Spring Data JPA)
 ├── database/      # Tập lệnh SQL khởi tạo cơ sở dữ liệu MySQL
+├── docs/          # Kiến trúc, kế hoạch, quy ước code
 ├── frontend/      # Giao diện React 19 + Vite 8
+├── AGENTS.md      # Quy trình làm việc, SCOPE, ranh giới
 ├── .env.example   # File mẫu cấu hình biến môi trường kết nối MySQL
 └── README.md
 ```
+
+## Tài liệu
+
+Bắt đầu ở [`docs/README.md`](docs/README.md). Các file chính:
+
+| Tài liệu | Nội dung |
+|---|---|
+| [`docs/kien-truc-he-thong.md`](docs/kien-truc-he-thong.md) | Kiến trúc, dữ liệu, API, quyền, NFR |
+| [`docs/ke-hoach-chia-viec.md`](docs/ke-hoach-chia-viec.md) | Lịch 15 ngày, phân công, hạn |
+| [`docs/chi-tiet-cong-viec.md`](docs/chi-tiet-cong-viec.md) | Task từng người, file làm việc, kết quả đầu ra |
+| [`docs/quy-uoc-code.md`](docs/quy-uoc-code.md) | Quy ước backend, frontend, database, test, Git |
+| [`AGENTS.md`](AGENTS.md) | Quy trình 8 bước, SCOPE, review, AI |
 
 ## Hướng dẫn cài đặt và chạy thử
 

@@ -1,6 +1,6 @@
 # Chi tiết công việc từng người
 
-Tài liệu này đi kèm [kế hoạch chia việc](ke-hoach-chia-viec.md). Mỗi người chỉ đọc phần của mình; mã task dùng để đặt tên nhánh và ghi trong PR.
+Tài liệu này đi kèm [kế hoạch chia việc](ke-hoach-chia-viec.md). Mỗi người chỉ đọc phần của mình; mã task dùng để đặt tên nhánh và ghi trong PR. Quy ước code ở [quy-uoc-code.md](quy-uoc-code.md).
 
 ## Mấy từ cần biết
 
