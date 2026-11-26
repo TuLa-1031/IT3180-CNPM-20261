@@ -194,6 +194,26 @@ normalizeMany('fees', response)                        // mảng row đã chuẩ
 
 ## 6. Cách frontend gọi API
 
+### 6.1 Route giao diện
+
+Nhân viên dùng chung khung `AdminLayout`, cư dân dùng `ResidentLayout`. Route nhân viên đặt phẳng
+(không tiền tố) để khớp path từng UC; route cư dân nằm dưới `/resident`.
+
+| Vai trò | Path | Màn hình |
+|---|---|---|
+| Công khai | `/login` | Đăng nhập |
+| Nhân viên | `/admin` | Tổng quan |
+| Nhân viên | `/statistics` | Thống kê |
+| Nhân viên | `/households`, `/residents`, `/changes` | UC01 |
+| Nhân viên | `/fees`, `/payments`, `/bills` | UC02 |
+| Nhân viên | `/feedbacks` | UC03 |
+| Nhân viên | `/equipment`, `/maintenance`, `/maintenance-schedules`, `/maintenance-tasks` | UC04 |
+| Nhân viên | `/vehicles`, `/vehicles/registrations`, `/vehicles/cards` | UC05 |
+| Nhân viên | `/account`, `/template` | Tài khoản, trang mẫu |
+| Cư dân | `/resident/bills`, `/resident/feedbacks`, `/resident/vehicles`, `/resident/notifications` | Cổng cư dân |
+
+Route guard chỉ điều hướng; quyền thật vẫn kiểm ở backend.
+
 ```js
 // features/fees/api.js
 import { apiClient } from '../../lib/apiClient'

@@ -188,24 +188,26 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomeRedirect />} />
 
-        <Route path="/admin" element={<Protected role="staff"><AdminLayout /></Protected>}>
-          <Route index element={<Dashboard />} />
-          <Route path="statistics" element={<Statistics />} />
-          <Route path="households" element={<Households />} />
-          <Route path="residents" element={<Residents />} />
-          <Route path="changes" element={<Changes />} />
-          <Route path="fees" element={<Fees />} />
-          <Route path="payments" element={<Payments />} />
-          <Route path="bills" element={<Bills />} />
-          <Route path="feedbacks" element={<Placeholder title="Phản ánh" sub="Tiếp nhận, phân loại và phản hồi yêu cầu của cư dân" />} />
-          <Route path="equipment" element={<Placeholder title="Thiết bị" sub="Danh mục thiết bị cần bảo trì trong chung cư" />} />
-          <Route path="maintenance-schedules" element={<Placeholder title="Lịch bảo trì" sub="Lịch bảo trì định kỳ theo thiết bị" />} />
-          <Route path="maintenance-tasks" element={<Placeholder title="Công việc bảo trì" sub="Phân công và theo dõi tiến độ công việc" />} />
-          <Route path="vehicles" element={<Vehicles />} />
-          <Route path="vehicle-registrations" element={<Placeholder title="Đăng ký gửi xe" sub="Duyệt yêu cầu đăng ký gửi xe của cư dân" />} />
-          <Route path="parking-cards" element={<Placeholder title="Thẻ gửi xe" sub="Cấp, khóa và cấp lại thẻ gửi xe" />} />
-          <Route path="account" element={<Account />} />
-          <Route path="template" element={<TemplatePage />} />
+        {/* Khung nhân viên: route phẳng theo path đã chốt cho từng UC. */}
+        <Route element={<Protected role="staff"><AdminLayout /></Protected>}>
+          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/statistics" element={<Statistics />} />
+          <Route path="/households" element={<Households />} />
+          <Route path="/residents" element={<Residents />} />
+          <Route path="/changes" element={<Changes />} />
+          <Route path="/fees" element={<Fees />} />
+          <Route path="/payments" element={<Payments />} />
+          <Route path="/bills" element={<Bills />} />
+          <Route path="/feedbacks" element={<Placeholder title="Phản ánh" sub="Tiếp nhận, phân loại và phản hồi yêu cầu của cư dân" />} />
+          <Route path="/equipment" element={<Placeholder title="Thiết bị" sub="Danh mục thiết bị cần bảo trì trong chung cư" />} />
+          <Route path="/maintenance" element={<Navigate to="/maintenance-tasks" replace />} />
+          <Route path="/maintenance-schedules" element={<Placeholder title="Lịch bảo trì" sub="Lịch bảo trì định kỳ theo thiết bị" />} />
+          <Route path="/maintenance-tasks" element={<Placeholder title="Công việc bảo trì" sub="Phân công và theo dõi tiến độ công việc" />} />
+          <Route path="/vehicles" element={<Vehicles />} />
+          <Route path="/vehicles/registrations" element={<Placeholder title="Đăng ký gửi xe" sub="Duyệt yêu cầu đăng ký gửi xe của cư dân" />} />
+          <Route path="/vehicles/cards" element={<Placeholder title="Thẻ gửi xe" sub="Cấp, khóa và cấp lại thẻ gửi xe" />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/template" element={<TemplatePage />} />
         </Route>
 
         <Route path="/resident" element={<Protected role="resident"><ResidentLayout /></Protected>}>
@@ -215,17 +217,6 @@ function AppRoutes() {
           <Route path="vehicles" element={<Placeholder title="Gửi xe" sub="Đăng ký gửi xe và xem thẻ gửi xe" />} />
           <Route path="notifications" element={<Placeholder title="Thông báo" sub="Thông báo từ Ban quản trị" />} />
         </Route>
-
-        {/* Đường dẫn cũ của các trang quản trị, giữ để không gãy link đã có. */}
-        <Route path="/households" element={<Navigate to="/admin/households" replace />} />
-        <Route path="/residents" element={<Navigate to="/admin/residents" replace />} />
-        <Route path="/changes" element={<Navigate to="/admin/changes" replace />} />
-        <Route path="/fees" element={<Navigate to="/admin/fees" replace />} />
-        <Route path="/payments" element={<Navigate to="/admin/payments" replace />} />
-        <Route path="/vehicles" element={<Navigate to="/admin/vehicles" replace />} />
-        <Route path="/bills" element={<Navigate to="/admin/bills" replace />} />
-        <Route path="/statistics" element={<Navigate to="/admin/statistics" replace />} />
-        <Route path="/account" element={<Navigate to="/admin/account" replace />} />
 
         <Route path="*" element={<HomeRedirect />} />
       </Routes>

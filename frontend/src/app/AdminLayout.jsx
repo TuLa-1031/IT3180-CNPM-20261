@@ -7,31 +7,31 @@ import { statusMeta } from '../lib/format'
 const NAV = [
   {
     label: 'Tổng quan',
-    items: [['/admin', 'Bảng điều khiển', 'dashboard'], ['/admin/statistics', 'Thống kê', 'stats']]
+    items: [['/admin', 'Bảng điều khiển', 'dashboard'], ['/statistics', 'Thống kê', 'stats']]
   },
   {
     label: 'Cư dân',
-    items: [['/admin/households', 'Hộ gia đình', 'home'], ['/admin/residents', 'Nhân khẩu', 'users'], ['/admin/changes', 'Biến động', 'swap']]
+    items: [['/households', 'Hộ gia đình', 'home'], ['/residents', 'Nhân khẩu', 'users'], ['/changes', 'Biến động', 'swap']]
   },
   {
     label: 'Thu phí',
-    items: [['/admin/fees', 'Khoản thu', 'receipt'], ['/admin/payments', 'Thu phí', 'wallet', 'pending'], ['/admin/bills', 'Thu hộ điện, nước', 'bolt']]
+    items: [['/fees', 'Khoản thu', 'receipt'], ['/payments', 'Thu phí', 'wallet', 'pending'], ['/bills', 'Thu hộ điện, nước', 'bolt']]
   },
   {
     label: 'Phản ánh',
-    items: [['/admin/feedbacks', 'Phản ánh', 'info']]
+    items: [['/feedbacks', 'Phản ánh', 'info']]
   },
   {
     label: 'Bảo trì',
-    items: [['/admin/equipment', 'Thiết bị', 'settings'], ['/admin/maintenance-schedules', 'Lịch bảo trì', 'calendar'], ['/admin/maintenance-tasks', 'Công việc', 'checkCircle']]
+    items: [['/equipment', 'Thiết bị', 'settings'], ['/maintenance-schedules', 'Lịch bảo trì', 'calendar'], ['/maintenance-tasks', 'Công việc', 'checkCircle']]
   },
   {
     label: 'Gửi xe',
-    items: [['/admin/vehicles', 'Phương tiện', 'car'], ['/admin/vehicle-registrations', 'Đăng ký gửi xe', 'receipt'], ['/admin/parking-cards', 'Thẻ gửi xe', 'wallet']]
+    items: [['/vehicles', 'Phương tiện', 'car'], ['/vehicles/registrations', 'Đăng ký gửi xe', 'receipt'], ['/vehicles/cards', 'Thẻ gửi xe', 'wallet']]
   },
   {
     label: 'Hệ thống',
-    items: [['/admin/account', 'Tài khoản', 'user'], ['/admin/template', 'Trang mẫu', 'dashboard']]
+    items: [['/account', 'Tài khoản', 'user'], ['/template', 'Trang mẫu', 'dashboard']]
   }
 ]
 
@@ -45,7 +45,8 @@ export default function AdminLayout() {
   const navigate = useNavigate()
 
   const current = useMemo(
-    () => FLAT.find(([to]) => location.pathname === to || (to !== '/admin' && location.pathname.startsWith(`${to}/`))),
+    () => FLAT.find(([to]) => location.pathname === to)
+      || [...FLAT].sort((a, b) => b[0].length - a[0].length).find(([to]) => location.pathname.startsWith(`${to}/`)),
     [location.pathname]
   )
   const pending = data?.payments?.filter((p) => p.status !== 'PAID').length || 0
@@ -56,7 +57,7 @@ export default function AdminLayout() {
     if (event.key !== 'Enter') return
     setGlobalSearch(event.target.value)
     setOpen(false)
-    navigate('/admin/households')
+    navigate('/households')
   }
 
   return (
