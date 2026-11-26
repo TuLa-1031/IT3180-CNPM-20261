@@ -46,6 +46,10 @@ public class UserEntity {
     @Column(name = "status", nullable = false, length = 20)
     private String status = "ACTIVE";
 
+    /** Liên kết tài khoản RESIDENT với nhân khẩu tương ứng (nullable, unique). */
+    @Column(name = "resident_id", unique = true)
+    private Integer residentId;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -1,6 +1,6 @@
 -- ============================================================================
 -- TẬP LỆNH KHỞI TẠO CƠ SỞ DỮ LIỆU QUẢN LÝ CHUNG CƯ BLUEMOON (MySQL)
--- Phiên bản: v1.0 (Hộ khẩu, Nhân khẩu, Khoản thu, Thu phí) + v2.0 (Gửi xe, Thu hộ)
+-- Phiên bản: v2.0 — GĐ1 bổ sung tài khoản cư dân/kỹ thuật, mật khẩu BCrypt
 -- ============================================================================
 
 CREATE DATABASE IF NOT EXISTS bluemoon_db
@@ -10,7 +10,7 @@ CREATE DATABASE IF NOT EXISTS bluemoon_db
 USE bluemoon_db;
 
 -- ----------------------------------------------------------------------------
--- 1. Bảng tài khoản Ban quản trị (users)
+-- 1. Bảng tài khoản nhân viên và cư dân (users)
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,8 +19,9 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(20),
-    role ENUM('ADMIN', 'MANAGER', 'ACCOUNTANT') NOT NULL DEFAULT 'MANAGER',
-    status ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+    role ENUM('ADMIN', 'MANAGER', 'ACCOUNTANT', 'TECHNICIAN', 'RESIDENT') NOT NULL DEFAULT 'MANAGER',
+    status ENUM('ACTIVE', 'LOCKED') NOT NULL DEFAULT 'ACTIVE',
+    resident_id INT NULL UNIQUE COMMENT 'Tài khoản cư dân gắn với nhân khẩu (nullable)',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -61,6 +62,10 @@ CREATE TABLE IF NOT EXISTS residents (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_residents_household FOREIGN KEY (household_id) REFERENCES households(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- Tài khoản cư dân liên kết nhân khẩu; thêm sau khi bảng residents đã tồn tại.
+ALTER TABLE users
+    ADD CONSTRAINT fk_users_resident FOREIGN KEY (resident_id) REFERENCES residents(id) ON DELETE SET NULL;
 
 -- ----------------------------------------------------------------------------
 -- 4. Bảng biến đổi nhân khẩu: tạm trú, tạm vắng, chuyển đến/đi (residence_changes)
@@ -175,10 +180,6 @@ CREATE TABLE IF NOT EXISTS utility_bills (
 -- DỮ LIỆU MẪU BAN ĐẦU ĐỂ KIỂM THỬ
 -- ============================================================================
 
-INSERT IGNORE INTO users (id, username, password, full_name, email, phone, role, status) VALUES
-(1, 'admin', '123456', 'Nguyễn Văn Quản Lý', 'admin@bluemoon.vn', '0901234567', 'ADMIN', 'ACTIVE'),
-(2, 'ketoan', '123456', 'Trần Thị Thu Ngân', 'ketoan@bluemoon.vn', '0912345678', 'ACCOUNTANT', 'ACTIVE');
-
 INSERT IGNORE INTO households (id, household_code, apartment_number, floor, area, owner_name, phone, move_in_date, status) VALUES
 (1, 'BM-0601', '601', 6, 75.50, 'Phạm Văn Thái', '0981112233', '2023-05-10', 'ACTIVE'),
 (2, 'BM-1002', '1002', 10, 92.00, 'Hồ Tú Toàn', '0982223344', '2023-06-15', 'ACTIVE'),
@@ -193,6 +194,15 @@ INSERT IGNORE INTO residents (id, household_id, full_name, date_of_birth, gender
 (5, 2, 'Lê Thu Hà', '1982-02-14', 'FEMALE', '001182067890', 'Vợ', 'Kế toán', 'Hà Nội', 'TEMPORARY_ABSENCE'),
 (6, 3, 'Vũ Kim Thu', '1992-08-30', 'FEMALE', '001192011223', 'Chủ hộ', 'Nhân viên văn phòng', 'Hải Phòng', 'PERMANENT'),
 (7, 4, 'Ngô Quang Minh', '1990-05-02', 'MALE', '001090033445', 'Chủ hộ', 'Chủ cửa hàng', 'Hà Nội', 'TEMPORARY_RESIDENCE');
+
+-- Mật khẩu demo của cả 5 tài khoản là 123456 (đã băm BCrypt, không lưu plaintext).
+-- Đặt sau residents để tài khoản cư dân tham chiếu được resident_id = 1.
+INSERT IGNORE INTO users (id, username, password, full_name, email, phone, role, status, resident_id) VALUES
+(1, 'admin', '$2a$10$TzKYYuitqbdA8YGsTxbbCueLFEENQ.p4mEXs53UNZI92ub8L3c4Cm', 'Nguyễn Văn Quản Lý', 'admin@bluemoon.vn', '0901234567', 'ADMIN', 'ACTIVE', NULL),
+(2, 'ketoan', '$2a$10$.CGkt5LevEGoqjBJzCr9xOCTlF8s9EKeLOWBl0nhzpoUcc/6oAq9O', 'Trần Thị Thu Ngân', 'ketoan@bluemoon.vn', '0912345678', 'ACCOUNTANT', 'ACTIVE', NULL),
+(3, 'quanly', '$2a$10$8ZD5/DhIF6M/ayM.VFX.Ke2hPfXHkTPZiD82r.ap54dfLr7ejnJ2K', 'Lê Quang Huy', 'quanly@bluemoon.vn', '0923456789', 'MANAGER', 'ACTIVE', NULL),
+(4, 'kythuat', '$2a$10$W/wskre34iLnAS/fRwOtvepIxmqoXNw5hJ57qsOklmV.39RLBB4im', 'Đỗ Minh Kỹ Thuật', 'kythuat@bluemoon.vn', '0934567890', 'TECHNICIAN', 'ACTIVE', NULL),
+(5, 'cudan', '$2a$10$QVYUx1EqfbA0loAQtr/pLuKBBahoMuXvKbH6NU/nTFiNv7qTYKZs6', 'Phạm Văn Thái', 'cudan@bluemoon.vn', '0981112233', 'RESIDENT', 'ACTIVE', 1);
 
 INSERT IGNORE INTO residence_changes (id, resident_id, household_id, change_type, start_date, end_date, destination_or_origin, reason, created_by) VALUES
 (1, 5, 2, 'TEMPORARY_ABSENCE', '2026-10-01', '2026-12-31', 'TP. Hồ Chí Minh', 'Đi công tác dài hạn', 1),
