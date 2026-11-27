@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, Link, useNavigate } from 'react-router-dom'
 import { useApp } from '../App'
 import { getToken, isTokenExpired, roleHome } from '../lib/auth'
 import { Icon, MoonMark } from '../components/Icons'
@@ -72,6 +72,10 @@ export default function Login() {
             </button>
           </form>
           {error && <div className="login-error" role="alert">{error}</div>}
+          <p style={{ marginTop: 16, textAlign: 'center', fontSize: 13, color: 'var(--text-muted)' }}>
+            Chưa có tài khoản?{' '}
+            <Link to="/register" style={{ color: 'var(--moon-deep)', fontWeight: 600 }}>Đăng ký</Link>
+          </p>
           <div className="login-hint">
             <strong>Tài khoản dùng thử (mật khẩu 123456):</strong><br />
             admin · quanly · ketoan · kythuat · cudan

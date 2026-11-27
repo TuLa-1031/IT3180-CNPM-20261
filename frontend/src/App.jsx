@@ -8,6 +8,7 @@ import { ToastHost } from './components/Toast'
 import AdminLayout from './app/AdminLayout'
 import ResidentLayout from './app/ResidentLayout'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Households from './pages/Households'
 import Residents from './pages/Residents'
@@ -210,6 +211,7 @@ function AppRoutes() {
     <>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomeRedirect />} />
 
         {/* Khung nhân viên: route phẳng theo path đã chốt cho từng UC. */}

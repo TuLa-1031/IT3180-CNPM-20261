@@ -4,6 +4,7 @@ import com.bluemoon.dto.ErrorResponse;
 import com.bluemoon.dto.auth.AuthResponse;
 import com.bluemoon.dto.auth.ChangePasswordRequest;
 import com.bluemoon.dto.auth.LoginRequest;
+import com.bluemoon.dto.auth.RegisterRequest;
 import com.bluemoon.dto.auth.UserResponse;
 import com.bluemoon.entity.UserEntity;
 import com.bluemoon.exception.BusinessException;
@@ -45,6 +46,33 @@ public class AuthService {
         return new AuthResponse(jwtTokenProvider.generateToken(user), toUserResponse(user));
     }
 
+    /**
+     * Tự đăng ký: luôn tạo tài khoản RESIDENT, không nhận vai trò từ client.
+     * resident_id để trống — ADMIN gán ở màn hình quản lý tài khoản (GĐ2).
+     */
+    @Transactional
+    public UserResponse register(RegisterRequest request) {
+        String username = request.username().trim();
+
+        if (userRepository.existsByUsername(username)) {
+            throw new BusinessException("DUPLICATE_CODE", HttpStatus.CONFLICT,
+                    "Tên đăng nhập đã tồn tại",
+                    List.of(new ErrorResponse.FieldError("username", "Tên đăng nhập đã tồn tại")));
+        }
+
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setFullName(request.fullName().trim());
+        user.setEmail(normalizeOptional(request.email()));
+        user.setPhone(request.phone().trim());
+        user.setRole("RESIDENT");
+        user.setStatus("ACTIVE");
+        user.setResidentId(null);
+
+        return toUserResponse(userRepository.save(user));
+    }
+
     public UserResponse currentUser(String username) {
         return toUserResponse(findUser(username));
     }
@@ -67,6 +95,10 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
+    }
+
+    private String normalizeOptional(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 
     private UserEntity findUser(String username) {
