@@ -3,22 +3,38 @@ import { useApp } from '../App'
 import { Icon } from '../components/Icons'
 import { Modal } from '../components/Modal'
 import { Empty, Field, FilterSelect, FormGrid, KV, PageHead, SelectField, StatusBadge, TableFoot, Toolbar } from '../components/ui'
+import { householdsApi } from '../features/households/api'
 import { date } from '../lib/format'
 
 export default function Households() {
   const { data, commit, nextId, notify, globalSearch, setGlobalSearch } = useApp()
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
+  const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [retry, setRetry] = useState(0)
   const [modal, setModal] = useState(null)
 
   useEffect(() => {
     if (globalSearch) { setSearch(globalSearch); setGlobalSearch('') }
   }, [globalSearch, setGlobalSearch])
 
-  const term = search.trim().toLowerCase()
-  const rows = data.households.filter((h) =>
-    (!status || h.status === status) &&
-    (!term || [h.ownerName, h.householdCode, h.apartmentNumber, h.phone].some((v) => String(v || '').toLowerCase().includes(term))))
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+    setError('')
+    householdsApi.list({ q: search.trim(), status })
+      .then((result) => { if (active) setRows(result) })
+      .catch((requestError) => {
+        if (active) {
+          setRows([])
+          setError(requestError.message || 'Không tải được dữ liệu hộ gia đình')
+        }
+      })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [search, status, retry])
 
   const current = modal && modal.id ? data.households.find((h) => h.id === modal.id) : null
   const close = () => setModal(null)
@@ -56,7 +72,9 @@ export default function Households() {
               <th>Chủ hộ</th><th>Điện thoại</th><th className="num">Nhân khẩu</th><th>Trạng thái</th><th className="num">Thao tác</th>
             </tr></thead>
             <tbody>
-              {rows.length ? rows.map((h) => (
+              {loading ? <tr><td colSpan={9} role="status">Đang tải dữ liệu hộ gia đình…</td></tr>
+                : error ? <tr><td colSpan={9} role="alert">{error} <button className="mini-btn" onClick={() => setRetry((value) => value + 1)}>Thử lại</button></td></tr>
+                  : rows.length ? rows.map((h) => (
                 <tr key={h.id}>
                   <td><span className="code">{h.householdCode}</span></td>
                   <td className="cell-main">{h.apartmentNumber}</td>

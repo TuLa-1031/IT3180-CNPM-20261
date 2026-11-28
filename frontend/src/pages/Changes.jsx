@@ -1,22 +1,44 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useApp } from '../App'
 import { Badge, Empty, Field, FilterSelect, FormGrid, Icon, PageHead, SelectField, TableFoot, TextArea, Toolbar } from '../components/ui'
 import { Modal } from '../components/Modal'
+import { residenceChangesApi } from '../features/households/api'
 import { CHANGE_TYPE, date } from '../lib/format'
 
 export default function Changes() {
   const { data, user, commit, nextId, notify } = useApp()
   const [search, setSearch] = useState('')
   const [type, setType] = useState('')
+  const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [retry, setRetry] = useState(0)
   const [adding, setAdding] = useState(false)
   const resident = (id) => data.residents.find((r) => r.id === id)
   const household = (id) => data.households.find((h) => h.id === id)
 
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+    setError('')
+    residenceChangesApi.list({ changeType: type })
+      .then((result) => { if (active) setRows(result) })
+      .catch((requestError) => {
+        if (active) {
+          setRows([])
+          setError(requestError.message || 'Không tải được dữ liệu biến động')
+        }
+      })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [type, retry])
+
   const term = search.trim().toLowerCase()
-  const rows = data.residenceChanges.filter((c) => {
+  const visibleRows = rows.filter((c) => {
     const r = resident(c.residentId), h = household(c.householdId)
     return (!type || c.changeType === type) &&
-      (!term || [r?.fullName, c.destinationOrOrigin, h?.apartmentNumber].some((v) => String(v || '').toLowerCase().includes(term)))
+      (!term || [r?.fullName, r?.identityCard, h?.householdCode, h?.apartmentNumber, c.destinationOrOrigin]
+        .some((v) => String(v || '').toLowerCase().includes(term)))
   }).sort((a, b) => String(b.startDate).localeCompare(String(a.startDate)))
 
   const save = (form) => {
@@ -48,7 +70,9 @@ export default function Changes() {
           <table className="data">
             <thead><tr><th>Cư dân</th><th>Căn hộ</th><th>Loại biến đổi</th><th>Từ ngày</th><th>Đến ngày</th><th>Địa chỉ liên quan</th><th>Lý do</th></tr></thead>
             <tbody>
-              {rows.length ? rows.map((c) => {
+              {loading ? <tr><td colSpan={7} role="status">Đang tải dữ liệu biến động…</td></tr>
+                : error ? <tr><td colSpan={7} role="alert">{error} <button className="mini-btn" onClick={() => setRetry((value) => value + 1)}>Thử lại</button></td></tr>
+                  : visibleRows.length ? visibleRows.map((c) => {
                 const meta = CHANGE_TYPE[c.changeType] || [c.changeType, 'gray']
                 return (
                   <tr key={c.id}>
@@ -60,11 +84,11 @@ export default function Changes() {
                     <td className="muted">{c.reason || '—'}</td>
                   </tr>
                 )
-              }) : <tr><td colSpan={7}><Empty title="Chưa có biến đổi nào" hint="Các ghi nhận tạm trú, tạm vắng sẽ xuất hiện tại đây." /></td></tr>}
+              }) : <tr><td colSpan={7}><Empty title="Chưa có biến động nào" hint="Thử thay đổi từ khóa hoặc bộ lọc." /></td></tr>}
             </tbody>
           </table>
         </div>
-        <TableFoot shown={rows.length} total={data.residenceChanges.length} />
+        <TableFoot shown={visibleRows.length} total={data.residenceChanges.length} />
       </section>
 
       {adding && (
