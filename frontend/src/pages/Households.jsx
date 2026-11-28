@@ -4,6 +4,7 @@ import { Icon } from '../components/Icons'
 import { Modal } from '../components/Modal'
 import { Empty, Field, FilterSelect, FormGrid, KV, PageHead, SelectField, StatusBadge, TableFoot, Toolbar } from '../components/ui'
 import { householdsApi } from '../features/households/api'
+import { HOUSEHOLD_STATUS_OPTIONS } from '../features/households/constants'
 import { date } from '../lib/format'
 
 export default function Households() {
@@ -64,7 +65,7 @@ export default function Households() {
       <section className="card">
         <Toolbar value={search} onChange={setSearch} placeholder="Tìm chủ hộ, mã hộ, căn hộ…"
           filter={<FilterSelect label="Lọc trạng thái" value={status} onChange={setStatus}
-            options={[['', 'Tất cả trạng thái'], ['ACTIVE', 'Đang hoạt động'], ['MOVED_OUT', 'Đã chuyển đi']]} />} />
+            options={HOUSEHOLD_STATUS_OPTIONS} />} />
         <div className="table-wrap">
           <table className="data">
             <thead><tr>

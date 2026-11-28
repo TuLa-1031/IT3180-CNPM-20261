@@ -3,6 +3,7 @@ import { useApp } from '../App'
 import { Badge, Empty, Field, FilterSelect, FormGrid, Icon, PageHead, SelectField, TableFoot, TextArea, Toolbar } from '../components/ui'
 import { Modal } from '../components/Modal'
 import { residenceChangesApi } from '../features/households/api'
+import { RESIDENCE_CHANGE_TYPE_OPTIONS } from '../features/households/constants'
 import { CHANGE_TYPE, date } from '../lib/format'
 
 export default function Changes() {
@@ -63,9 +64,9 @@ export default function Changes() {
         <button className="btn btn-primary" onClick={() => setAdding(true)}><Icon name="plus" size={16} />Ghi nhận biến đổi</button>
       </PageHead>
       <section className="card">
-        <Toolbar value={search} onChange={setSearch} placeholder="Tìm cư dân, địa chỉ…"
+        <Toolbar value={search} onChange={setSearch} placeholder="Tìm cư dân, mã hộ, CCCD, địa chỉ…"
           filter={<FilterSelect label="Lọc loại biến đổi" value={type} onChange={setType}
-            options={[['', 'Tất cả loại'], ['TEMPORARY_RESIDENCE', 'Tạm trú'], ['TEMPORARY_ABSENCE', 'Tạm vắng'], ['MOVE_IN', 'Chuyển đến'], ['MOVE_OUT', 'Chuyển đi']]} />} />
+            options={RESIDENCE_CHANGE_TYPE_OPTIONS} />} />
         <div className="table-wrap">
           <table className="data">
             <thead><tr><th>Cư dân</th><th>Căn hộ</th><th>Loại biến đổi</th><th>Từ ngày</th><th>Đến ngày</th><th>Địa chỉ liên quan</th><th>Lý do</th></tr></thead>
@@ -97,7 +98,7 @@ export default function Changes() {
             <SelectField label="Cư dân" name="residentId"
               options={data.residents.map((r) => [r.id, `${r.fullName}, ${household(r.householdId)?.apartmentNumber || ''}`])} />
             <SelectField label="Loại biến đổi" name="changeType"
-              options={[['TEMPORARY_RESIDENCE', 'Tạm trú'], ['TEMPORARY_ABSENCE', 'Tạm vắng'], ['MOVE_IN', 'Chuyển đến'], ['MOVE_OUT', 'Chuyển đi']]} />
+              options={RESIDENCE_CHANGE_TYPE_OPTIONS.filter(([value]) => value)} />
             <Field label="Từ ngày" name="startDate" type="date" value={new Date().toISOString().slice(0, 10)} required />
             <Field label="Đến ngày" name="endDate" type="date" />
             <Field label="Địa chỉ liên quan" name="destinationOrOrigin" />

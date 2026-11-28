@@ -4,6 +4,7 @@ import { Icon } from '../components/Icons'
 import { Modal } from '../components/Modal'
 import { Empty, Field, FilterSelect, FormGrid, KV, PageHead, SelectField, StatusBadge, TableFoot, TextArea, Toolbar } from '../components/ui'
 import { residentsApi } from '../features/households/api'
+import { RESIDENT_STATUS_OPTIONS } from '../features/households/constants'
 import { date } from '../lib/format'
 
 export default function Residents() {
@@ -60,7 +61,7 @@ export default function Residents() {
       <section className="card">
         <Toolbar value={search} onChange={setSearch} placeholder="Tìm họ tên, CCCD, căn hộ…"
           filter={<FilterSelect label="Lọc trạng thái" value={status} onChange={setStatus}
-            options={[['', 'Tất cả trạng thái'], ['PERMANENT', 'Thường trú'], ['TEMPORARY_RESIDENCE', 'Tạm trú'], ['TEMPORARY_ABSENCE', 'Tạm vắng'], ['MOVED_OUT', 'Đã chuyển đi']]} />} />
+            options={RESIDENT_STATUS_OPTIONS} />} />
         <div className="table-wrap">
           <table className="data">
             <thead><tr>

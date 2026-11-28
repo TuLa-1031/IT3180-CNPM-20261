@@ -1,0 +1,105 @@
+{
+  "info": {
+    "name": "BlueMoon UC01",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "List households by keyword and status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/households?q=BM-0601&status=ACTIVE"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns filtered households', () => {",
+              "  pm.response.to.have.status(200)",
+              "  const households = pm.response.json()",
+              "  pm.expect(households).to.be.an('array')",
+              "  pm.expect(households).to.have.lengthOf(1)",
+              "  pm.expect(households.every((household) => household.status === 'ACTIVE' && household.householdCode.includes('BM-0601'))).to.be.true",
+              "})"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List residents by household, identity card, and status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/residents?householdId=1&q=001085012345&status=PERMANENT"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns filtered residents', () => {",
+              "  pm.response.to.have.status(200)",
+              "  const residents = pm.response.json()",
+              "  pm.expect(residents).to.be.an('array')",
+              "  pm.expect(residents).to.have.lengthOf(1)",
+              "  pm.expect(residents.every((resident) => resident.householdId === 1 && resident.residenceStatus === 'PERMANENT' && String(resident.identityCard || '').includes('001085012345'))).to.be.true",
+              "})"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List residence changes by household and type",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/residence-changes?householdId=2&changeType=TEMPORARY_ABSENCE"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('returns filtered residence changes', () => {",
+              "  pm.response.to.have.status(200)",
+              "  const changes = pm.response.json()",
+              "  pm.expect(changes).to.be.an('array')",
+              "  pm.expect(changes).to.have.lengthOf(1)",
+              "  pm.expect(changes.every((change) => change.householdId === 2 && change.changeType === 'TEMPORARY_ABSENCE')).to.be.true",
+              "})"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
