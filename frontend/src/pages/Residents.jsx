@@ -3,7 +3,7 @@ import { useApp } from '../App'
 import { Icon } from '../components/Icons'
 import { Modal } from '../components/Modal'
 import { Empty, Field, FilterSelect, FormGrid, KV, PageHead, SelectField, StatusBadge, TableFoot, TextArea, Toolbar } from '../components/ui'
-import { residentsApi } from '../features/households/api'
+import { householdsApi, residentsApi } from '../features/households/api'
 import { RESIDENT_STATUS_OPTIONS } from '../features/households/constants'
 import { date } from '../lib/format'
 
@@ -12,21 +12,35 @@ export default function Residents() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
   const [rows, setRows] = useState([])
+  const [households, setHouseholds] = useState([])
+  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [retry, setRetry] = useState(0)
   const [modal, setModal] = useState(null)
-  const household = (id) => data.households.find((h) => h.id === id)
+  const household = (id) => households.find((h) => h.id === id)
 
   useEffect(() => {
     let active = true
     setLoading(true)
     setError('')
-    residentsApi.list({ q: search.trim(), status })
-      .then((result) => { if (active) setRows(result) })
+    Promise.all([
+      residentsApi.list({ q: search.trim(), status }),
+      residentsApi.list({}),
+      householdsApi.list({})
+    ])
+      .then(([residentRows, allResidents, householdRows]) => {
+        if (active) {
+          setRows(residentRows)
+          setTotal(allResidents.length)
+          setHouseholds(householdRows)
+        }
+      })
       .catch((requestError) => {
         if (active) {
           setRows([])
+          setTotal(0)
+          setHouseholds([])
           setError(requestError.message || 'Không tải được dữ liệu nhân khẩu')
         }
       })
@@ -35,6 +49,7 @@ export default function Residents() {
   }, [search, status, retry])
 
   const current = modal?.id ? data.residents.find((r) => r.id === modal.id) : null
+  const selected = modal?.id ? rows.find((r) => r.id === modal.id) : null
   const close = () => setModal(null)
 
   const save = (form) => {
@@ -51,7 +66,7 @@ export default function Residents() {
     notify(current ? 'Đã cập nhật nhân khẩu' : 'Đã thêm nhân khẩu')
   }
 
-  const householdOptions = data.households.map((h) => [h.id, `${h.householdCode}, ${h.apartmentNumber}, ${h.ownerName}`])
+  const householdOptions = households.map((h) => [h.id, `${h.householdCode}, ${h.apartmentNumber}, ${h.ownerName}`])
 
   return (
     <>
@@ -88,7 +103,7 @@ export default function Residents() {
             </tbody>
           </table>
         </div>
-        <TableFoot shown={rows.length} total={data.residents.length} />
+        <TableFoot shown={rows.length} total={total} />
       </section>
 
       {modal?.type === 'edit' && (
@@ -110,19 +125,19 @@ export default function Residents() {
         </Modal>
       )}
 
-      {modal?.type === 'view' && current && (
+      {modal?.type === 'view' && selected && (
         <Modal title="Chi tiết nhân khẩu" confirmText="Đóng" onClose={close}>
           <KV pairs={[
-            ['Họ và tên', current.fullName],
-            ['Căn hộ', household(current.householdId)?.householdCode || '—'],
-            ['Quan hệ', current.relationshipToOwner],
-            ['Ngày sinh', date(current.dateOfBirth)],
-            ['Giới tính', current.gender === 'MALE' ? 'Nam' : current.gender === 'FEMALE' ? 'Nữ' : 'Khác'],
-            ['CCCD/CMND', current.identityCard || '—'],
-            ['Nghề nghiệp', current.occupation || '—'],
-            ['Quê quán', current.hometown || '—'],
-            ['Trạng thái', <StatusBadge value={current.residenceStatus} />],
-            ['Ghi chú', current.note || '—']
+            ['Họ và tên', selected.fullName],
+            ['Căn hộ', household(selected.householdId)?.householdCode || '—'],
+            ['Quan hệ', selected.relationshipToOwner],
+            ['Ngày sinh', date(selected.dateOfBirth)],
+            ['Giới tính', selected.gender === 'MALE' ? 'Nam' : selected.gender === 'FEMALE' ? 'Nữ' : 'Khác'],
+            ['CCCD/CMND', selected.identityCard || '—'],
+            ['Nghề nghiệp', selected.occupation || '—'],
+            ['Quê quán', selected.hometown || '—'],
+            ['Trạng thái', <StatusBadge value={selected.residenceStatus} />],
+            ['Ghi chú', selected.note || '—']
           ]} />
         </Modal>
       )}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useApp } from '../App'
 import { Badge, Empty, Field, FilterSelect, FormGrid, Icon, PageHead, SelectField, TableFoot, TextArea, Toolbar } from '../components/ui'
 import { Modal } from '../components/Modal'
-import { residenceChangesApi } from '../features/households/api'
+import { householdsApi, residentsApi, residenceChangesApi } from '../features/households/api'
 import { RESIDENCE_CHANGE_TYPE_OPTIONS } from '../features/households/constants'
 import { CHANGE_TYPE, date } from '../lib/format'
 
@@ -11,22 +11,40 @@ export default function Changes() {
   const [search, setSearch] = useState('')
   const [type, setType] = useState('')
   const [rows, setRows] = useState([])
+  const [residents, setResidents] = useState([])
+  const [households, setHouseholds] = useState([])
+  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [retry, setRetry] = useState(0)
   const [adding, setAdding] = useState(false)
-  const resident = (id) => data.residents.find((r) => r.id === id)
-  const household = (id) => data.households.find((h) => h.id === id)
+  const resident = (id) => residents.find((r) => r.id === id)
+  const household = (id) => households.find((h) => h.id === id)
 
   useEffect(() => {
     let active = true
     setLoading(true)
     setError('')
-    residenceChangesApi.list({ changeType: type })
-      .then((result) => { if (active) setRows(result) })
+    Promise.all([
+      residenceChangesApi.list({ changeType: type }),
+      residenceChangesApi.list({}),
+      residentsApi.list({}),
+      householdsApi.list({})
+    ])
+      .then(([changes, allChanges, residentRows, householdRows]) => {
+        if (active) {
+          setRows(changes)
+          setTotal(allChanges.length)
+          setResidents(residentRows)
+          setHouseholds(householdRows)
+        }
+      })
       .catch((requestError) => {
         if (active) {
           setRows([])
+          setTotal(0)
+          setResidents([])
+          setHouseholds([])
           setError(requestError.message || 'Không tải được dữ liệu biến động')
         }
       })
@@ -43,7 +61,7 @@ export default function Changes() {
   }).sort((a, b) => String(b.startDate).localeCompare(String(a.startDate)))
 
   const save = (form) => {
-    const r = resident(Number(form.residentId))
+    const r = data.residents.find((residentRow) => residentRow.id === Number(form.residentId))
     if (!r) { notify('Chọn cư dân cần ghi nhận', 'err'); return false }
     commit('residenceChanges', {
       type: 'create',
@@ -89,14 +107,14 @@ export default function Changes() {
             </tbody>
           </table>
         </div>
-        <TableFoot shown={visibleRows.length} total={data.residenceChanges.length} />
+        <TableFoot shown={visibleRows.length} total={total} />
       </section>
 
       {adding && (
         <Modal title="Ghi nhận biến đổi nhân khẩu" wide onClose={() => setAdding(false)} onConfirm={save}>
           <FormGrid>
             <SelectField label="Cư dân" name="residentId"
-              options={data.residents.map((r) => [r.id, `${r.fullName}, ${household(r.householdId)?.apartmentNumber || ''}`])} />
+              options={data.residents.map((r) => [r.id, `${r.fullName}, ${data.households.find((h) => h.id === r.householdId)?.apartmentNumber || ''}`])} />
             <SelectField label="Loại biến đổi" name="changeType"
               options={RESIDENCE_CHANGE_TYPE_OPTIONS.filter(([value]) => value)} />
             <Field label="Từ ngày" name="startDate" type="date" value={new Date().toISOString().slice(0, 10)} required />

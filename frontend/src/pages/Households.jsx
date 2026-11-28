@@ -3,7 +3,7 @@ import { useApp } from '../App'
 import { Icon } from '../components/Icons'
 import { Modal } from '../components/Modal'
 import { Empty, Field, FilterSelect, FormGrid, KV, PageHead, SelectField, StatusBadge, TableFoot, Toolbar } from '../components/ui'
-import { householdsApi } from '../features/households/api'
+import { householdsApi, residentsApi } from '../features/households/api'
 import { HOUSEHOLD_STATUS_OPTIONS } from '../features/households/constants'
 import { date } from '../lib/format'
 
@@ -12,6 +12,8 @@ export default function Households() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
   const [rows, setRows] = useState([])
+  const [residents, setResidents] = useState([])
+  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [retry, setRetry] = useState(0)
@@ -25,11 +27,23 @@ export default function Households() {
     let active = true
     setLoading(true)
     setError('')
-    householdsApi.list({ q: search.trim(), status })
-      .then((result) => { if (active) setRows(result) })
+    Promise.all([
+      householdsApi.list({ q: search.trim(), status }),
+      householdsApi.list({}),
+      residentsApi.list({})
+    ])
+      .then(([households, allHouseholds, residentRows]) => {
+        if (active) {
+          setRows(households)
+          setTotal(allHouseholds.length)
+          setResidents(residentRows)
+        }
+      })
       .catch((requestError) => {
         if (active) {
           setRows([])
+          setTotal(0)
+          setResidents([])
           setError(requestError.message || 'Không tải được dữ liệu hộ gia đình')
         }
       })
@@ -38,6 +52,7 @@ export default function Households() {
   }, [search, status, retry])
 
   const current = modal && modal.id ? data.households.find((h) => h.id === modal.id) : null
+  const selected = modal?.id ? rows.find((h) => h.id === modal.id) : null
   const close = () => setModal(null)
 
   const save = (form) => {
@@ -83,7 +98,7 @@ export default function Households() {
                   <td className="num">{h.area} m²</td>
                   <td className="cell-main">{h.ownerName}<div className="cell-sub">{date(h.moveInDate)}, vào ở</div></td>
                   <td>{h.phone}</td>
-                  <td className="num">{data.residents.filter((r) => r.householdId === h.id).length}</td>
+                  <td className="num">{residents.filter((r) => r.householdId === h.id).length}</td>
                   <td><StatusBadge value={h.status} /></td>
                   <td><div className="row-actions">
                     <button className="mini-btn" onClick={() => setModal({ type: 'view', id: h.id })}>Xem</button>
@@ -94,7 +109,7 @@ export default function Households() {
             </tbody>
           </table>
         </div>
-        <TableFoot shown={rows.length} total={data.households.length} />
+        <TableFoot shown={rows.length} total={total} />
       </section>
 
       {modal?.type === 'edit' && (
@@ -113,19 +128,19 @@ export default function Households() {
         </Modal>
       )}
 
-      {modal?.type === 'view' && current && (
+      {modal?.type === 'view' && selected && (
         <Modal title="Chi tiết hộ gia đình" confirmText="Đóng" onClose={close}>
           <KV pairs={[
-            ['Mã hộ', <span className="code">{current.householdCode}</span>],
-            ['Căn hộ', `${current.apartmentNumber}, Tầng ${current.floor}`],
-            ['Diện tích', `${current.area} m²`],
-            ['Chủ hộ', current.ownerName],
-            ['Điện thoại', current.phone || '—'],
-            ['Ngày vào ở', date(current.moveInDate)],
-            ['Trạng thái', <StatusBadge value={current.status} />]
+            ['Mã hộ', <span className="code">{selected.householdCode}</span>],
+            ['Căn hộ', `${selected.apartmentNumber}, Tầng ${selected.floor}`],
+            ['Diện tích', `${selected.area} m²`],
+            ['Chủ hộ', selected.ownerName],
+            ['Điện thoại', selected.phone || '—'],
+            ['Ngày vào ở', date(selected.moveInDate)],
+            ['Trạng thái', <StatusBadge value={selected.status} />]
           ]} />
           <h4 style={{ fontSize: 13, margin: '20px 0 6px' }}>Nhân khẩu trong hộ</h4>
-          {data.residents.filter((r) => r.householdId === current.id).map((r) => (
+          {residents.filter((r) => r.householdId === selected.id).map((r) => (
             <div className="list-row" key={r.id}>
               <span className="dot" style={{ background: 'var(--moon)' }} />
               <div><div className="lr-main">{r.fullName}</div><div className="lr-sub">{r.relationshipToOwner}</div></div>
